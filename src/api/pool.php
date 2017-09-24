@@ -161,7 +161,7 @@ class nanopoolEtcEth{
             $data["hashrate"] = (string)$information["data"];
         }
         if($statusNo === "200.4"){
-            $data["estimatedEarns"] = $information["data"];
+            $data["estimatedEarnings"] = $information["data"];
         }
         if(empty($data)){
             return $this->error("500.-1");
