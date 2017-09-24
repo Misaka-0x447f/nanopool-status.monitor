@@ -67,8 +67,9 @@ function update(){
         timeout:90000
     });
 
-    //4.update calc
+    
     if(typeof(lastAvgSpeed) !== "undefined"){
+        //4.update calc
         $.ajax({
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
@@ -83,5 +84,9 @@ function update(){
             },
             timeout:90000
         });
+        
+        setTimeout(update, 15*1000);
+    }else{
+        setTimeout(update, 15*60*1000);
     }
 }
