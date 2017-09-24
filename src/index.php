@@ -32,7 +32,7 @@ if(isset($_GET["config"]) and property_exists($config, $_GET["config"])){
 <script>
     $(document).ready(function(){
         setTimeout(update,3*1000);
-        setInterval(update,15*1000);
+        setInterval(update,30*60*1000);
     });
     <?php
         echo '
