@@ -85,8 +85,8 @@ function update(){
             timeout:90000
         });
         
-        setTimeout(update, 15*1000);
+        setTimeout(update, 10*60*1000);
     }else{
-        setTimeout(update, 15*60*1000);
+        setTimeout(update, 10*1000);
     }
 }
