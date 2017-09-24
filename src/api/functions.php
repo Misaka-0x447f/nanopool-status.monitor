@@ -7,7 +7,7 @@
  */
 
 class debugConsoleOpt{
-    static private $enableDebugOutput = true;
+    static private $enableDebugOutput = false;
     static private $enableDebugOutputToLogFile = false;
     static private $scriptStartTime;
     static private function getRunTimerF(){
