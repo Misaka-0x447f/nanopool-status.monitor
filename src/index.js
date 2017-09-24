@@ -4,9 +4,15 @@ function update(){
 
     if(config["coinType"] === "etc"){
         document.getElementById("balance-unit").innerHTML = "mETC";
-        document.getElementById("hashrate-unit").innerHTML = "MHash/s";
-        document.getElementById("avgHashrate-unit").innerHTML = "MHash/s";
+        document.getElementById("hashrate-unit").innerHTML = "MHash/s now";
+        document.getElementById("avgHashrate-unit").innerHTML = "MHash/s average";
         document.getElementById("estimatedEarnings-unit").innerHTML = "mETC/day";
+    }
+    if(config["coinType"] === "eth"){
+        document.getElementById("balance-unit").innerHTML = "mETH";
+        document.getElementById("hashrate-unit").innerHTML = "MHash/s now";
+        document.getElementById("avgHashrate-unit").innerHTML = "MHash/s average";
+        document.getElementById("estimatedEarnings-unit").innerHTML = "mETH/day";
     }
 
     //1.update balance

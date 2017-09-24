@@ -47,28 +47,28 @@ if(isset($_GET["config"]) and property_exists($config, $_GET["config"])){
 <body>
 <div id="container">
     <span id="balance">
-        ---.-
+        ---.---
     </span>
     <span id="balance-unit">
 
     </span>
     <br/>
     <span id="hashrate">
-
+        ---.---
     </span>
     <span id="hashrate-unit">
 
     </span>
     <br/>
     <span id="avgHashrate">
-
+        ---.---
     </span>
     <span id="avgHashrate-unit">
 
     </span>
     <br/>
     <span id="estimatedEarnings">
-
+        ---.---
     </span>
     <span id="estimatedEarnings-unit">
 
