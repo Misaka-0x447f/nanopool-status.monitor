@@ -5,7 +5,6 @@
  * Date: 2017/9/24
  * Time: 17:23
  */
-
 require("functions.php");
 class nanopool{
     //set-able var
@@ -18,27 +17,28 @@ class nanopool{
     }
     public function minerAccountBalance(){
         if(!$this->presetParameterValid()){
-            return $this->error("400/1");
+            return $this->error("400.1");
         }
         $result = $this->webOpt->post(array(
             "url" => "https://api.nanopool.org/v1/eth/balance/" . $this->minerAddress
         ));
-        $result = json_decode($result);
+        $result = json_decode($result, true);
         $checkResult = $this->checkResult($result);
         if($checkResult !== true){
             return $checkResult;
         }
-        if($result->status === false){
-            if($result->error === "Account not found"){
-                return $this->error("404/1");
+        if($result["status"] === false){
+            if($result["error"] === "Account not found"){
+                return $this->error("404.1");
             }else{
                 return $this->unknownResult($result);
             }
         }
-        if($result->status === true){
-            return $this->ok("200/1", $result->data);
+        if($result["status"] === true){
+            unset($result["status"]);
+            return $this->ok("200.1", $result);
         }
-        return $this->error("500/0");
+        return $this->error("500.0");
     }
     function __destruct(){
         unset($this->webOpt);
@@ -50,76 +50,59 @@ class nanopool{
         }
         return false;
     }
-    private function ok(string $dataStructureNo, object $information){
-        if($dataStructureNo === "200/1"){
-            $data = array(
-                "status" => "ok",
-                "balance" => (string)$information->balance
-            );
-        }
-        if(empty($data)){
-            return $this->error("500/-1");
-        }
+    private function ok(string $statusNo, $information = null){
         $data["status"] = "ok";
-        return (object)$data;
-    }
-    private function error(string $errNo, mixed $information = null){
-        if($errNo === "400/1"){
-            $data = array(
-                "message" => "miner address was not valid"
-            );
-        }
-        if($errNo === "404/1"){
-            $data = array(
-                "message" => "miner address was not found on pool server"
-            );
-        }
-        if($errNo === "500/-1"){
-            $data = array(
-                "message" => "internal server error"
-            );
-        }
-        if($errNo === "500/1"){
-            $data = array(
-                "message" => "cannot parse result returned by pool server"
-            );
-        }
-        if($errNo === "500/2"){
-            $data = array(
-                "message" => "unexpected result returned by pool server"
-            );
-        }
-        if($errNo === "500/3"){ //pool server unknown error
-            $data = array(
-                "message" => $information
-            );
+        $data["statusNo"] = $statusNo;
+        if($statusNo === "200.1"){
+            $data["balance"] = (string)$information["data"];
         }
         if(empty($data)){
-            $errNo = "500/0";
-            $data = array(
-                "message" => "undefined internal server error"
-            );
+            return $this->error("500.-1");
         }
-        $data["status"] = "interrupted";
-        $data["errNo"] = $errNo;
-        return (object)$data;
+        return $data;
     }
-    private function checkResult(object $result){
-        if($result === null){
-            return $this->error("500/1");
+    private function error(string $statusNo = "500.0", $information = null){
+        $data["status"] = "interrupted";
+        $data["statusNo"] = $statusNo;
+        if($statusNo === "400.1"){
+            $data["message"] = "miner address was not valid";
         }
-        if(empty($result->status) or !($result->status === false or $result->status === true)){
-            return $this->error("500/2");
+        if($statusNo === "404.1"){
+            $data["message"] = "miner address was not found on pool server";
+        }
+        if($statusNo === "500.-1"){
+            $data["message"] = "internal server error";
+        }
+        if($statusNo === "500.1"){
+            $data["message"] = "cannot parse result returned by pool server";
+        }
+        if($statusNo === "500.2"){
+            $data["message"] = "unexpected result returned by pool server";
+            $data["result"] = $information;
+        }
+        if($statusNo === "500.3"){ //pool server unknown error
+            $data["message"] = $information;
+        }
+        if(empty($data)){
+            $data["message"] = "undefined internal server error";
+        }
+        return $data;
+    }
+    private function checkResult($result){
+        if($result === null){
+            return $this->error("500.1");
+        }
+        if(!is_bool($result["status"])){
+            return $this->error("500.2", $result);
         }
         return true;
     }
-    private function unknownResult(object $result){
-        $result = (array)$result;
+    private function unknownResult(array $result){
         unset($result["status"]);
         if(count($result) === 1){
-            return $this->error("500/3", reset($result));
+            return $this->error("500.3", reset($result));
         }else{
-            return $this->error("500/3", $result);
+            return $this->error("500.3", $result);
         }
     }
 }
