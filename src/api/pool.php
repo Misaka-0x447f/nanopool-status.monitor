@@ -12,7 +12,7 @@ class nanopoolEtcEth{
     public $minerAddress; //"0x" is optional.
     //int var
     private $webOpt;
-    function __construct(string $type = "etc", string $address = null){
+    function __construct($type = "etc", $address = null){
         $this->typeOfApi = $type;
         $this->minerAddress = $address;
         $this->webOpt = new webOpt();
@@ -27,8 +27,9 @@ class nanopoolEtcEth{
         $result = $this->webOpt->post(array(
             "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/balance/" . $this->minerAddress
         ));
+        $rawResult = $result;
         $result = json_decode($result, true);
-        $checkResult = $this->checkResult($result);
+        $checkResult = $this->checkResult($result, $rawResult);
 
         if($checkResult !== true){
             return $checkResult;
@@ -54,8 +55,9 @@ class nanopoolEtcEth{
         $result = $this->webOpt->post(array(
             "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/avghashratelimited/" . $this->minerAddress . "/" . $hours
         ));
+        $rawResult = $result;
         $result = json_decode($result, true);
-        $checkResult = $this->checkResult($result);
+        $checkResult = $this->checkResult($result, $rawResult);
 
         if($checkResult !== true){
             return $checkResult;
@@ -77,8 +79,9 @@ class nanopoolEtcEth{
         $result = $this->webOpt->post(array(
             "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/hashrate/" . $this->minerAddress
         ));
+        $rawResult = $result;
         $result = json_decode($result, true);
-        $checkResult = $this->checkResult($result);
+        $checkResult = $this->checkResult($result, $rawResult);
 
         if($checkResult !== true){
             return $checkResult;
@@ -96,7 +99,10 @@ class nanopoolEtcEth{
         }
         return $this->error("500.0");
     }
-    public function minerEstimatedEarnings(string $hashrates){
+    public function minerEstimatedEarnings(string $hashrates = null){
+        if($hashrates === null){
+            return $this->error("400.0");
+        }
         $paraValid = $this->presetParameterValid();
         if($paraValid !== true){
             return $paraValid;
@@ -104,8 +110,9 @@ class nanopoolEtcEth{
         $result = $this->webOpt->post(array(
             "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/approximated_earnings/" . $hashrates
         ));
+        $rawResult = $result;
         $result = json_decode($result, true);
-        $checkResult = $this->checkResult($result);
+        $checkResult = $this->checkResult($result, $rawResult);
 
         if($checkResult !== true){
             return $checkResult;
@@ -181,10 +188,10 @@ class nanopoolEtcEth{
             $data["message"] = "internal server error";
         }
         if($statusNo === "500.1"){
-            $data["message"] = "cannot parse result returned by pool server";
+            $data["message"] = "cannot parse result returned by pool server. raw value is " . $information;
         }
         if($statusNo === "500.2"){
-            $data["message"] = "unexpected result returned by pool server";
+            $data["message"] = "unexpected result returned by pool server. raw value is " . $information;
             $data["result"] = $information;
         }
         if($statusNo === "500.3"){ //pool server unknown error
@@ -195,12 +202,12 @@ class nanopoolEtcEth{
         }
         return $data;
     }
-    private function checkResult($result){
+    private function checkResult($result, $rawResult){
         if($result === null){
-            return $this->error("500.1");
+            return $this->error("500.1", $rawResult);
         }
         if(!is_bool($result["status"])){
-            return $this->error("500.2", $result);
+            return $this->error("500.2", $rawResult);
         }
         return true;
     }
