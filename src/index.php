@@ -51,12 +51,12 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
                 <span id="in-pool" class="constant">
                     in-pool
                 </span>
-                <span id="balance" class="unit">
+                <span id="balance-unit" class="unit">
                     ---
                 </span>
             </td>
             <td class="left-align">
-                <span id="avgHashrate" class="unit">
+                <span id="avgHashrate-unit" class="unit">
                     ---
                 </span>
                 <span id="24hr.avg" class="constant">
@@ -78,12 +78,12 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
         </tr>
         <tr class="label-small">
             <td class="right-align">
-                <span id="estimatedEarnings" class="unit">
+                <span id="estimatedEarnings-unit" class="unit">
                     ---
                 </span>
             </td>
             <td class="left-align">
-                <span id="hashrate" class="unit">
+                <span id="hashrate-unit" class="unit">
                     ---
                 </span>
             </td>
@@ -105,24 +105,24 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
                 <span id="total-paid" class="constant">
                     total-paid
                 </span>
-                <span id="paid" class="unit">
+                <span id="payments-unit" class="unit">
                     ---
                 </span>
             </td>
             <td class="left-align">
-                <span id="price" class="unit">
+                <span id="prices-unit" class="unit">
                     ---
                 </span>
             </td>
         </tr>
         <tr class="digit-small">
             <td class="right-align">
-                <span id="paid" class="digit">
+                <span id="payments" class="digit">
                     .----
                 </span>
             </td>
             <td class="left-align">
-                <span id="price" class="digit">
+                <span id="prices" class="digit">
                     .----
                 </span>
             </td>
