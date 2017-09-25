@@ -130,6 +130,50 @@ class nanopoolEtcEth{
         }
         return $this->error("500.0");
     }
+    public function minerPayments(){
+        $paraValid = $this->presetParameterValid();
+        if($paraValid !== true){
+            return $paraValid;
+        }
+        $result = $this->webOpt->post(array(
+            "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/payments/" . $this->minerAddress
+        ));
+        $rawResult = $result;
+        $result = json_decode($result, true);
+        $checkResult = $this->checkResult($result, $rawResult);
+
+        if($checkResult !== true){
+            return $checkResult;
+        }
+        if($result["status"] === false){
+            return $this->unknownResult($result);
+        }
+        if($result["status"] === true){
+            unset($result["status"]);
+            return $this->ok("200.5", $result);
+        }
+        return $this->error("500.0");
+    }
+    public function prices(){
+        $result = $this->webOpt->post(array(
+            "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/prices"
+        ));
+        $rawResult = $result;
+        $result = json_decode($result, true);
+        $checkResult = $this->checkResult($result, $rawResult);
+
+        if($checkResult !== true){
+            return $checkResult;
+        }
+        if($result["status"] === false){
+            return $this->unknownResult($result);
+        }
+        if($result["status"] === true){
+            unset($result["status"]);
+            return $this->ok("200.6", $result);
+        }
+        return $this->error("500.0");
+    }
 
 
     function __destruct(){
@@ -162,6 +206,12 @@ class nanopoolEtcEth{
         }
         if($statusNo === "200.4"){
             $data["estimatedEarnings"] = $information["data"];
+        }
+        if($statusNo === "200.5"){
+            $data["payments"] = $information["data"];
+        }
+        if($statusNo === "200.6"){
+            $data["prices"] = $information["data"];
         }
         if(empty($data)){
             return $this->error("500.-1");

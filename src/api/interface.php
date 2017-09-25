@@ -28,7 +28,8 @@ if($dataType === "avgHashrate"){
 }
 if($dataType === "estimatedEarnings" and (int)$speed > 0){
     exit(json_encode($poolOpt->minerEstimatedEarnings($speed)));
-}else if((int)$speed <= 0){
+}
+if($dataType === "estimatedEarnings" and (int)$speed <= 0){
     exit('
     {
         "status":"ok",
@@ -77,5 +78,11 @@ if($dataType === "estimatedEarnings" and (int)$speed > 0){
         }
     }
     ');
+}
+if($dataType === "payments"){
+    exit(json_encode($poolOpt->minerPayments()));
+}
+if($dataType === "prices"){
+    exit(json_encode($poolOpt->prices()));
 }
 exit("{\"status\":\"interrupted\",\"statusNo\":\"400.0\",\"message\":\"bad request. params may invalid.\"}");
