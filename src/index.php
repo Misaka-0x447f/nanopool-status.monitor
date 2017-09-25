@@ -46,84 +46,84 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
 <body>
 <div id="container">
     <table>
-        <tr class="label big">
+        <tr class="label-big">
             <td class="right-align">
                 <span id="in-pool" class="constant">
                     in-pool
                 </span>
                 <span id="balance" class="unit">
-
+                    ---
                 </span>
             </td>
             <td class="left-align">
                 <span id="avgHashrate" class="unit">
-
+                    ---
                 </span>
                 <span id="24hr.avg" class="constant">
                     24hr. avg
                 </span>
             </td>
         </tr>
-        <tr class="digit big">
+        <tr class="digit-big">
             <td class="right-align">
                 <span id="balance" class="digit">
-
+                    .----
                 </span>
             </td>
             <td class="left-align">
                 <span id="avgHashrate" class="digit">
-
+                    .----
                 </span>
             </td>
         </tr>
-        <tr class="label small">
+        <tr class="label-small">
             <td class="right-align">
                 <span id="estimatedEarnings" class="unit">
-
+                    ---
                 </span>
             </td>
             <td class="left-align">
                 <span id="hashrate" class="unit">
-
+                    ---
                 </span>
             </td>
         </tr>
-        <tr class="digit small">
+        <tr class="digit-small">
             <td class="right-align">
                 <span id="estimatedEarnings" class="digit">
-
+                    .----
                 </span>
             </td>
             <td class="left-align">
                 <span id="hashrate" class="digit">
-
+                    .----
                 </span>
             </td>
         </tr>
-        <tr class="label small">
+        <tr class="label-small">
             <td class="right-align">
                 <span id="total-paid" class="constant">
                     total-paid
                 </span>
                 <span id="paid" class="unit">
-
+                    ---
                 </span>
             </td>
             <td class="left-align">
                 <span id="price" class="unit">
-
+                    ---
                 </span>
             </td>
         </tr>
-        <tr class="digit small">
+        <tr class="digit-small">
             <td class="right-align">
                 <span id="paid" class="digit">
-
+                    .----
                 </span>
             </td>
             <td class="left-align">
                 <span id="price" class="digit">
-
+                    .----
                 </span>
             </td>
         </tr>
