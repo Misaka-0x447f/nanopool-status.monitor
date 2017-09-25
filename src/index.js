@@ -2,6 +2,8 @@ function update(){
     config = getConfig();
     var arg = window.location.href + "/../api/interface.php?coinType=" + config["coinType"] + "&address=" + config["address"];
 
+    $("html").css("font-size", 60*(document.body.offsetWidth/1920) + "px");
+
     if(config["coinType"] === "etc"){
         unit = {
             "base":{
@@ -229,5 +231,9 @@ function getOrderOfMagnitude(digit){
     return Math.log10(digit);
 }
 function isNumeric(n){
-    return !isNaN(parseFloat(n)) && isFinite(n);
+    if(typeof n !== "undefined"){
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }else{
+        return false;
+    }
 }

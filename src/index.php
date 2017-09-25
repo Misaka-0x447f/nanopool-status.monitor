@@ -55,6 +55,9 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
                     ---
                 </span>
             </td>
+            <td class="column-separator">
+                -
+            </td>
             <td class="left-align">
                 <span id="avgHashrate-unit" class="unit">
                     ---
@@ -70,6 +73,9 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
                     .----
                 </span>
             </td>
+            <td class="column-separator">
+                -
+            </td>
             <td class="left-align">
                 <span id="avgHashrate" class="digit">
                     .----
@@ -82,6 +88,9 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
                     ---
                 </span>
             </td>
+            <td class="column-separator">
+                -
+            </td>
             <td class="left-align">
                 <span id="hashrate-unit" class="unit">
                     ---
@@ -93,6 +102,9 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
                 <span id="estimatedEarnings" class="digit">
                     .----
                 </span>
+            </td>
+            <td class="column-separator">
+                -
             </td>
             <td class="left-align">
                 <span id="hashrate" class="digit">
@@ -109,6 +121,9 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
                     ---
                 </span>
             </td>
+            <td class="column-separator">
+                -
+            </td>
             <td class="left-align">
                 <span id="prices-unit" class="unit">
                     ---
@@ -120,6 +135,9 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
                 <span id="payments" class="digit">
                     .----
                 </span>
+            </td>
+            <td class="column-separator">
+                -
             </td>
             <td class="left-align">
                 <span id="prices" class="digit">

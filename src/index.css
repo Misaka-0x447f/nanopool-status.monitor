@@ -5,16 +5,33 @@
 }
 body{
     font-family: Consolas, sans-serif;
-    margin:0;
+    margin: 0;
     background-color: #000;
-    color:#6cf;
-    font-size:48px;
+    color: #6cf;
 }
-.digit{
+
+.label-big{
+    font-size: 1rem;
+}
+.label-small{
+    font-size: 0.5rem;
+}
+.digit-big{
+    font-size: 5.916666666666667rem;
+}
+.digit-small{
+    font-size: 1.766666666666667rem;
+}
+.right-align{
+    float: right;
+}
+.digit-big, .digit-small{
     font-family: "7barSp", Consolas, sans-serif;
-    font-size:5em;
-    text-align:right;
 }
-.unit{
-    font-size:1em;
+.column-separator{
+    width:0.2704225352111152549097402167578rem;
+    opacity:0;
+}
+table{
+    margin:2.3333333333333333333333333333333rem 0 0 1.6rem;
 }
