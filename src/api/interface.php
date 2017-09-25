@@ -10,7 +10,7 @@ $coinType = $_GET["coinType"];
 $address = $_GET["address"];
 $dataType = $_GET["dataType"];
 $speed = $_GET["speed"];
-$period = 6;
+$period = 24;
 if(isset($_GET["period"])){
     $period = $_GET["period"];
 }
@@ -26,10 +26,10 @@ if($dataType === "hashrate"){
 if($dataType === "avgHashrate"){
     exit(json_encode($poolOpt->minerAverageHashrate($period)));
 }
-if($dataType === "estimatedEarnings" and (int)$speed > 0){
+if($dataType === "estimatedEarnings" and isset($speed) and (int)$speed > 0){
     exit(json_encode($poolOpt->minerEstimatedEarnings($speed)));
 }
-if($dataType === "estimatedEarnings" and (int)$speed <= 0){
+if($dataType === "estimatedEarnings" and isset($speed) and (int)$speed <= 0){
     exit('
     {
         "status":"ok",

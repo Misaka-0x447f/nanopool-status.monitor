@@ -150,6 +150,11 @@ class nanopoolEtcEth{
         }
         if($result["status"] === true){
             unset($result["status"]);
+            $sum = 0;
+            foreach($result["data"] as $value){
+                $sum += $value["amount"];
+            }
+            $result["sum"] = $sum;
             return $this->ok("200.5", $result);
         }
         return $this->error("500.0");
@@ -209,6 +214,7 @@ class nanopoolEtcEth{
         }
         if($statusNo === "200.5"){
             $data["payments"] = $information["data"];
+            $data["sum"] = $information["sum"];
         }
         if($statusNo === "200.6"){
             $data["prices"] = $information["data"];
