@@ -61,7 +61,7 @@ function update(){
         success: function(data){
             data = JSON.parse(data);
             console.log(data);
-            if(data["status"] === "ok"){
+            if(isNumeric(data["balance"])){
                 var value = Number(data["balance"]);
                 var level = getOrderOfMagnitudeF(value);
                 document.getElementById("balance").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
@@ -83,7 +83,7 @@ function update(){
         success: function(data){
             data = JSON.parse(data);
             console.log(data);
-            if(data["status"] === "ok"){
+            if(isNumeric(data["hashrate"])){
                 var value = Number(data["hashrate"]);
                 console.log(value);
                 var level = getOrderOfMagnitudeF(value);
@@ -106,7 +106,7 @@ function update(){
             data = JSON.parse(data);
             if(data["status"] === "ok"){
                 console.log(data);
-                if(data["status"] === "ok"){
+                if(isNumeric(data["avgHashrate"])){
                     var value = Number(data["avgHashrate"]);
                     console.log(value);
                     var level = getOrderOfMagnitudeF(value);
@@ -132,7 +132,7 @@ function update(){
             success: function(data){
                 data = JSON.parse(data);
                 console.log(data);
-                if(data["status"] === "ok"){
+                if(isNumeric(data["estimatedEarnings"]["day"]["coins"])){
                     var value = Number(data["estimatedEarnings"]["day"]["coins"]);
                     console.log(value);
                     var level = getOrderOfMagnitudeF(value);
@@ -155,7 +155,7 @@ function update(){
         success: function(data){
             data = JSON.parse(data);
             console.log(data);
-            if(data["status"] === "ok"){
+            if(isNumeric(data["sum"])){
                 var value = Number(data["sum"]);
                 console.log(value);
                 var level = getOrderOfMagnitudeF(value);
@@ -177,7 +177,7 @@ function update(){
         success: function(data){
             data = JSON.parse(data);
             console.log(data);
-            if(data["status"] === "ok"){
+            if(isNumeric(data["prices"]["price_cny"])){
                 var value = data["prices"]["price_cny"];
                 console.log(value);
                 var level = getOrderOfMagnitudeF(value);
@@ -194,10 +194,12 @@ function update(){
     for (i in readyStatus){
         if(i !== 1){
             setTimeout(update, 20*1000);
+            console.log("update interval set to 20 seconds");
             return 1;
         }
     }
     setTimeout(update, 15*60*1000);
+    console.log("update interval set to 15 minutes");
     return 0;
 }
 function getOrderOfMagnitudeName(digit){//receiving a data, not data magnitude
@@ -225,4 +227,7 @@ function getOrderOfMagnitude(digit){
         return 1;
     }
     return Math.log10(digit);
+}
+function isNumeric(n){
+    return !isNaN(parseFloat(n)) && isFinite(n);
 }
