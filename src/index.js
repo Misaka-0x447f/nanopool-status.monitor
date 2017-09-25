@@ -81,12 +81,12 @@ function update(){
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
         dataType: "html",
-        url: arg + "&dataType=hashrate",
+        url: arg + "&dataType=hashrateHistory",
         success: function(data){
             data = JSON.parse(data);
             console.log(data);
-            if(isNumeric(data["hashrate"])){
-                var value = Number(data["hashrate"]);
+            if(isNumeric(data["hashrateHistory"][0]["hashrate"])){
+                var value = Number(data["hashrateHistory"][0]["hashrate"]);
                 console.log(value);
                 var level = getOrderOfMagnitudeF(value);
                 document.getElementById("hashrate").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);

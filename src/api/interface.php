@@ -23,6 +23,10 @@ if($dataType === "balance"){
 if($dataType === "hashrate"){
     exit(json_encode($poolOpt->minerHashrate()));
 }
+if($dataType === "hashrateHistory"){
+    exit(json_encode($poolOpt->minerHashrateHistory()));
+
+}
 if($dataType === "avgHashrate"){
     exit(json_encode($poolOpt->minerAverageHashrate($period)));
 }

@@ -99,6 +99,30 @@ class nanopoolEtcEth{
         }
         return $this->error("500.0");
     }
+    public function minerHashrateHistory(){
+        $paraValid = $this->presetParameterValid();
+        if($paraValid !== true){
+            return $paraValid;
+        }
+        $result = $this->webOpt->post(array(
+            "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/history/" . $this->minerAddress
+        ));
+        $rawResult = $result;
+        $result = json_decode($result, true);
+        $checkResult = $this->checkResult($result, $rawResult);
+
+        if($checkResult !== true){
+            return $checkResult;
+        }
+        if($result["status"] === false){
+            return $this->unknownResult($result);
+        }
+        if($result["status"] === true){
+            unset($result["status"]);
+            return $this->ok("200.7", $result);
+        }
+        return $this->error("500.0");
+    }
     public function minerEstimatedEarnings(string $hashrates = null){
         if($hashrates === null){
             return $this->error("400.0");
@@ -218,6 +242,9 @@ class nanopoolEtcEth{
         }
         if($statusNo === "200.6"){
             $data["prices"] = $information["data"];
+        }
+        if($statusNo === "200.7"){
+            $data["hashrateHistory"] = $information["data"];
         }
         if(empty($data)){
             return $this->error("500.-1");
