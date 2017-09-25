@@ -1,5 +1,20 @@
+@font-face{
+    font-family: "7barSp";
+    src: local("7barSp"),
+    url("lib/7barsp.ttf");
+}
 body{
+    font-family: Consolas, sans-serif;
+    margin:0;
     background-color: #000;
     color:#6cf;
     font-size:48px;
+}
+.digit{
+    font-family: "7barSp", Consolas, sans-serif;
+    font-size:5em;
+    text-align:right;
+}
+.unit{
+    font-size:1em;
 }

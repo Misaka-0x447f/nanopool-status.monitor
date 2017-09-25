@@ -26,7 +26,7 @@ function update(){
             data = JSON.parse(data);
             console.log(data);
             if(data["status"] === "ok"){
-                document.getElementById("balance").innerHTML = (data["balance"] * 1000).toFixed(config["accu"]);
+                document.getElementById("balance").innerHTML = Number(Number(data["balance"] * 1000).toPrecision(config["accu"]));
             }
         },
         timeout:90000
@@ -42,7 +42,7 @@ function update(){
             data = JSON.parse(data);
             console.log(data);
             if(data["status"] === "ok"){
-                document.getElementById("hashrate").innerHTML = data["hashrate"];
+                document.getElementById("hashrate").innerHTML = Number(Number(data["hashrate"]).toPrecision(config["accu"]));
             }
         },
         timeout:90000
@@ -59,7 +59,7 @@ function update(){
             if(data["status"] === "ok"){
                 console.log(data);
                 if(data["status"] === "ok"){
-                    document.getElementById("avgHashrate").innerHTML = data["avgHashrate"];
+                    document.getElementById("avgHashrate").innerHTML = Number(Number(data["avgHashrate"]).toPrecision(config["accu"]));
                 }
                 lastAvgSpeed = data["avgHashrate"];
             }
@@ -79,7 +79,7 @@ function update(){
                 data = JSON.parse(data);
                 console.log(data);
                 if(data["status"] === "ok"){
-                    document.getElementById("estimatedEarnings").innerHTML = data["estimatedEarnings"]["day"]["coins"]*1000;
+                    document.getElementById("estimatedEarnings").innerHTML = Number(Number(data["estimatedEarnings"]["day"]["coins"]*1000).toPrecision(config["accu"]));
                 }
             },
             timeout:90000

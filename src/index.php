@@ -14,11 +14,11 @@ require("functions.php");
 $fileOpt = new fileOpt();
 $fileOpt->fileSelect("config.json");
 $config = $fileOpt->jsonFileRead();
-if(isset($_GET["config"]) and property_exists($config, $_GET["config"])){
+if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
     $config = ((array)$config)[$_GET["config"]];
-}else if(isset(((array)$config)["default"])){
+} else if (isset(((array)$config)["default"])) {
     $config = ((array)$config)["default"];
-}else{
+} else {
     exit("{\"status\":\"interrupted\",\"statusNo\":\"400.0\",\"message\":\"bad request. params may invalid.\"}");
 }
 ?>
@@ -28,13 +28,13 @@ if(isset($_GET["config"]) and property_exists($config, $_GET["config"])){
 </title>
 <link href="index.css" rel="stylesheet">
 <script src="index.js<?php echo "?nocache=" . (string)rand() ?>"></script>
-<script src="lib/jquery.js"></script>
+<script src="lib/jquery.js<?php echo "?nocache=" . (string)rand() ?>"></script>
 <script>
-    $(document).ready(function(){
-        setTimeout(update,3*1000);
+    $(document).ready(function () {
+        setTimeout(update, 3 * 1000);
     });
     <?php
-        echo '
+    echo '
             function getConfig(){
                 var config = ' . (string)json_encode($config) . ';
                 console.log(config);
@@ -45,32 +45,55 @@ if(isset($_GET["config"]) and property_exists($config, $_GET["config"])){
 </script>
 <body>
 <div id="container">
-    <span id="balance">
-        ---.---
-    </span>
-    <span id="balance-unit">
+    <table>
+        <tr>
+            <td>
+                <span id="balance" class="digit">
+                    ------
+                </span>
+            </td>
+            <td>
+                <span id="balance-unit" class="unit">
 
-    </span>
-    <br/>
-    <span id="hashrate">
-        ---.---
-    </span>
-    <span id="hashrate-unit">
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span id="hashrate" class="digit">
+                    ------
+                </span>
+            </td>
+            <td>
+                <span id="hashrate-unit" class="unit">
 
-    </span>
-    <br/>
-    <span id="avgHashrate">
-        ---.---
-    </span>
-    <span id="avgHashrate-unit">
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span id="avgHashrate" class="digit">
+                    ------
+                </span>
+            </td>
+            <td>
+                <span id="avgHashrate-unit" class="unit">
 
-    </span>
-    <br/>
-    <span id="estimatedEarnings">
-        ---.---
-    </span>
-    <span id="estimatedEarnings-unit">
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span id="estimatedEarnings" class="digit">
+                    ------
+                </span>
+            </td>
+            <td>
+                <span id="estimatedEarnings-unit" class="unit">
 
-    </span>
+                </span>
+            </td>
+        </tr>
+    </table>
 </div>
 </body>
