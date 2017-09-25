@@ -2,12 +2,10 @@
   "comment":"This is the example file of config.json. Rename it to config.json and change to correct info first. When no param '?config=', using the 'default'. If '?config=group1', using the group 1.",
   "default":{
     "coinType": "etc",
-    "address": "57cda5f152e5da5c16952bc810ebee8235df7353",
-    "accu":"3"
+    "address": "57cda5f152e5da5c16952bc810ebee8235df7353"
   },
   "group1":{
     "coinType": "eth",
-    "address": "57cda5f152e5da5c16952bc810ebee8235df7353",
-    "accu":"3"
+    "address": "57cda5f152e5da5c16952bc810ebee8235df7353"
   }
 }
