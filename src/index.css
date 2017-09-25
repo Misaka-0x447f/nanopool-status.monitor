@@ -3,6 +3,24 @@
     src: local("7barSp"),
     url("lib/7barsp.ttf");
 }
+@keyframes show {
+    0% {
+        left:0.3em;
+        opacity:0;
+    }
+    75% {
+        left:0.3em;
+        opacity:0;
+    }
+    100% {
+        left:0;
+        opacity:1;
+    }
+}
+html{
+    position: relative;
+    animation: show 4s;
+}
 body{
     font-family: Consolas, sans-serif;
     margin: 0;
