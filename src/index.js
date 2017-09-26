@@ -1,6 +1,6 @@
 function update(){
     config = getConfig();
-    var arg = window.location.href + "/../api/interface.php?coinType=" + config["coinType"] + "&address=" + config["address"];
+    var arg = window.location.href.split("?") + "/../api/interface.php?coinType=" + config["coinType"] + "&address=" + config["address"];
 
     $("html").css("font-size", 60*(document.body.offsetWidth/1920) + "px");
 
@@ -81,12 +81,12 @@ function update(){
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
         dataType: "html",
-        url: arg + "&dataType=hashrateHistory",
+        url: arg + "&dataType=hashrate",
         success: function(data){
             data = JSON.parse(data);
             console.log(data);
-            if(isNumeric(data["hashrateHistory"][0]["hashrate"])){
-                var value = Number(data["hashrateHistory"][0]["hashrate"]);
+            if(isNumeric(data["hashrate"])){
+                var value = Number(data["hashrate"]);
                 console.log(value);
                 var level = getOrderOfMagnitudeF(value);
                 document.getElementById("hashrate").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);

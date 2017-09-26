@@ -6,10 +6,6 @@
  * Date: 2017/9/24
  * Time: 17:18
  */
-/*require("api/pool.php");
-$poolOpt = new nanopoolEtcEth("etc", "57cda5f152e5da5c16952bc810ebee8235df7353");
-$avgHashrate = $poolOpt->minerAverageHashrate(24)["avgHashrate"];
-echo json_encode($poolOpt->minerEstimatedEarnings($avgHashrate));*/
 require("functions.php");
 $fileOpt = new fileOpt();
 $fileOpt->fileSelect("config.json");
