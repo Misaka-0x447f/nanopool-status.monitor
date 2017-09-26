@@ -91,6 +91,9 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
                 <span id="hashrate-unit" class="unit">
                     ---
                 </span>
+                <span id="current" class="constant">
+                    current
+                </span>
             </td>
         </tr>
         <tr class="digit-small">
@@ -123,6 +126,9 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
             <td class="left-align">
                 <span id="prices-unit" class="unit">
                     ---
+                </span>
+                <span id="avg" class="constant">
+                    avg
                 </span>
             </td>
         </tr>
