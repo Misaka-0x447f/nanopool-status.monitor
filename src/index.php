@@ -127,8 +127,8 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
                 <span id="prices-unit" class="unit">
                     ---
                 </span>
-                <span id="avg" class="constant">
-                    avg
+                <span id="per-coin" class="constant">
+                    per-coin
                 </span>
             </td>
         </tr>

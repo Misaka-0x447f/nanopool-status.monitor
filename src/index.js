@@ -10,7 +10,7 @@ function update(){
                 "coin":"ETC",
                 "rate":"hash/s",
                 "coinRate":"ETC/day",
-                "currency":"CNY"
+                "currency":"USD"
             },
             "api":{                     // index of order of magnitude
                 "balance":0,
@@ -28,7 +28,7 @@ function update(){
                 "coin":"ETH",
                 "rate":"hash/s",
                 "coinRate":"ETH/day",
-                "currency":"CNY"
+                "currency":"USD"
             },
             "api":{                     // index of order of magnitude
                 "balance":0,
@@ -40,7 +40,42 @@ function update(){
             }
         }
     }
-
+    if(config["coinType"] === "xmr"){
+        unit = {
+            "base":{
+                "coin":"XMR",
+                "rate":"hash/s",
+                "coinRate":"XMR/day",
+                "currency":"USD"
+            },
+            "api":{                     // index of order of magnitude
+                "balance":0,
+                "hashrate":0,           // H/s
+                "avgHashrate":0,
+                "estimatedEarnings":0,
+                "payments":0,
+                "prices":0
+            }
+        }
+    }
+    if(config["coinType"] === "zec"){
+        unit = {
+            "base":{
+                "coin":"ZEC",
+                "rate":"sol/s",
+                "coinRate":"ZEC/day",
+                "currency":"USD"
+            },
+            "api":{                     // index of order of magnitude
+                "balance":0,
+                "hashrate":0,           // sol/s
+                "avgHashrate":0,
+                "estimatedEarnings":0,
+                "payments":0,
+                "prices":0
+            }
+        }
+    }
     //record readyStatus
     readyStatus = {
         "loadData":{
@@ -179,8 +214,8 @@ function update(){
         success: function(data){
             data = JSON.parse(data);
             console.log(data);
-            if(isNumeric(data["prices"]["price_cny"])){
-                var value = data["prices"]["price_cny"];
+            if(isNumeric(data["prices"]["price_usd"])){
+                var value = data["prices"]["price_usd"];
                 console.log(value);
                 var level = getOrderOfMagnitudeF(value);
                 document.getElementById("prices").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
