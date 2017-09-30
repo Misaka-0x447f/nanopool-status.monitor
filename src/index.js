@@ -235,8 +235,8 @@ function update(){
             return 1;
         }
     }
-    setTimeout(update, 15*60*1000);
-    console.log("update interval set to 15 minutes");
+    setTimeout(update, 5*60*1000);
+    console.log("update interval set to 5 minutes");
     return 0;
 }
 function getOrderOfMagnitudeName(digit){//receiving a data, not data magnitude
