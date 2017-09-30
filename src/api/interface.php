@@ -89,4 +89,4 @@ if($dataType === "payments"){
 if($dataType === "prices"){
     exit(json_encode($poolOpt->prices()));
 }
-exit("{\"status\":\"interrupted\",\"statusNo\":\"400.0\",\"message\":\"bad request. params may invalid.\"}");
+exit("{\"status\":\"interrupted\",\"statusNo\":\"400.0\",\"message\":\"bad request. params may invalid in interface.\"}");

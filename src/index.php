@@ -15,7 +15,7 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
 } else if (isset(((array)$config)["default"])) {
     $config = ((array)$config)["default"];
 } else {
-    exit("{\"status\":\"interrupted\",\"statusNo\":\"400.0\",\"message\":\"bad request. params may invalid.\"}");
+    exit("{\"status\":\"interrupted\",\"statusNo\":\"400.0\",\"message\":\"bad request. params may invalid in front page. check config.json.\"}");
 }
 ?>
 <meta charset="utf-8">

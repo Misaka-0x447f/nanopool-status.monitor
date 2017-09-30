@@ -125,7 +125,7 @@ class nanopoolEtcEth{
     }
     public function minerEstimatedEarnings(string $hashrates = null){
         if($hashrates === null){
-            return $this->error("400.0");
+            return $this->error("400.3");
         }
         $paraValid = $this->presetParameterValid();
         if($paraValid !== true){
@@ -143,7 +143,7 @@ class nanopoolEtcEth{
         }
         if($result["status"] === false){
             if($result["error"] === "Bad request params"){
-                return $this->error("400.0");
+                return $this->error("400.4", $hashrates);
             }else{
                 return $this->unknownResult($result);
             }
@@ -255,7 +255,7 @@ class nanopoolEtcEth{
         $data["status"] = "interrupted";
         $data["statusNo"] = $statusNo;
         if($statusNo === "400.0"){
-            $data["message"] = "bad request. params may invalid.";
+            $data["message"] = "bad request. params may invalid in api interface.";
         }
         if($statusNo === "400.1"){
             $data["message"] = "miner address was not valid. current address is " . $information["address"]
@@ -263,6 +263,12 @@ class nanopoolEtcEth{
         }
         if($statusNo === "400.2"){
             $data["message"] = "invalid mine type. mine type must be 'etc', 'eth', 'zec' or 'xmr'.";
+        }
+        if($statusNo === "400.3"){
+            $data["message"] = "bad request. hashrate is required.";
+        }
+        if($statusNo === "400.4"){
+            $data["message"] = "bad request. params may invalid. param is " . $information;
         }
         if($statusNo === "404.1"){
             $data["message"] = "miner address was not found on pool server";

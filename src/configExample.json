@@ -6,6 +6,7 @@
   },
   "group1":{
     "coinType": "eth",
-    "address": "57cda5f152e5da5c16952bc810ebee8235df7353"
+    "address": "57cda5f152e5da5c16952bc810ebee8235df7353",
+    "priceUnit": "cny"
   }
 }

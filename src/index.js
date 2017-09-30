@@ -214,13 +214,18 @@ function update(){
         success: function(data){
             data = JSON.parse(data);
             console.log(data);
-            if(isNumeric(data["prices"]["price_usd"])){
-                var value = data["prices"]["price_usd"];
+            if(isNumeric(data["prices"]["price_" + unit["base"]["currency"].toLowerCase()])){
+                var value = data["prices"]["price_" + unit["base"]["currency"].toLowerCase()];
+                document.getElementById("prices-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["prices"]))
+                    + unit["base"]["currency"];
+                if(config["priceUnit"] !== undefined){
+                    value = data["prices"]["price_" + config["priceUnit"]];
+                    document.getElementById("prices-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["prices"]))
+                        + config["priceUnit"].toUpperCase();
+                }
                 console.log(value);
                 var level = getOrderOfMagnitudeF(value);
                 document.getElementById("prices").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
-                document.getElementById("prices-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["prices"]))
-                    + unit["base"]["currency"];
                 readyStatus["loadData"]["prices"] = 1
             }
         },
