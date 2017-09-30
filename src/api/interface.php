@@ -10,7 +10,7 @@ $coinType = $_GET["coinType"];
 $address = $_GET["address"];
 $dataType = $_GET["dataType"];
 $speed = $_GET["speed"];
-$period = 24;
+$period = 2;
 if(isset($_GET["period"])){
     $period = $_GET["period"];
 }

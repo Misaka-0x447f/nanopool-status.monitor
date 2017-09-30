@@ -216,7 +216,7 @@ class nanopoolEtcEth{
                 "type" => gettype($this->minerAddress)
             ));
         }
-        if($this->typeOfApi !== "etc" and $this->typeOfApi !== "eth"){
+        if($this->typeOfApi !== "etc" and $this->typeOfApi !== "eth" and $this->typeOfApi !== "zec" and $this->typeOfApi !== "xmr"){
             return $this->error("400.2");
         }
         return true;
@@ -262,7 +262,7 @@ class nanopoolEtcEth{
                              . ", address data type is " . $information["type"];
         }
         if($statusNo === "400.2"){
-            $data["message"] = "invalid mine type. mine type must be 'etc' or 'eth'.";
+            $data["message"] = "invalid mine type. mine type must be 'etc', 'eth', 'zec' or 'xmr'.";
         }
         if($statusNo === "404.1"){
             $data["message"] = "miner address was not found on pool server";
