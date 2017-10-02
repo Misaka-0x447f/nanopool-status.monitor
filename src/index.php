@@ -58,8 +58,8 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
                 <span id="avgHashrate-unit" class="unit">
                     ---
                 </span>
-                <span id="2hr.avg" class="constant">
-                    2hr. avg
+                <span id="hr-avg" class="constant">
+                    --hr. avg
                 </span>
             </td>
         </tr>

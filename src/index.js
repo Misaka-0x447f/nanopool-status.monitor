@@ -1,5 +1,14 @@
 function update(){
     config = getConfig();
+    if(config["priceUnit"] === undefined){
+        config["priceUnit"] = "usd";
+    }
+    if(config["avgRange"] === undefined){
+        config["avgRange"] = 6;
+    }
+    if(config["updateInterval"] === undefined){
+        config["updateInterval"] = 5;
+    }
     var arg = window.location.href.split("?") + "/../api/interface.php?coinType=" + config["coinType"] + "&address=" + config["address"];
 
     $("html").css("font-size", 60*(document.body.offsetWidth/1920) + "px");
@@ -9,8 +18,7 @@ function update(){
             "base":{
                 "coin":"ETC",
                 "rate":"hash/s",
-                "coinRate":"ETC/day",
-                "currency":"USD"
+                "coinRate":"ETC/day"
             },
             "api":{                     // index of order of magnitude
                 "balance":0,
@@ -27,8 +35,7 @@ function update(){
             "base":{
                 "coin":"ETH",
                 "rate":"hash/s",
-                "coinRate":"ETH/day",
-                "currency":"USD"
+                "coinRate":"ETH/day"
             },
             "api":{                     // index of order of magnitude
                 "balance":0,
@@ -45,8 +52,7 @@ function update(){
             "base":{
                 "coin":"XMR",
                 "rate":"hash/s",
-                "coinRate":"XMR/day",
-                "currency":"USD"
+                "coinRate":"XMR/day"
             },
             "api":{                     // index of order of magnitude
                 "balance":0,
@@ -63,8 +69,7 @@ function update(){
             "base":{
                 "coin":"ZEC",
                 "rate":"sol/s",
-                "coinRate":"ZEC/day",
-                "currency":"USD"
+                "coinRate":"ZEC/day"
             },
             "api":{                     // index of order of magnitude
                 "balance":0,
@@ -138,7 +143,7 @@ function update(){
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
         dataType: "html",
-        url: arg + "&dataType=avgHashrate",
+        url: arg + "&dataType=avgHashrate&avgRange=" + config["avgRange"],
         success: function(data){
             data = JSON.parse(data);
             if(data["status"] === "ok"){
@@ -150,6 +155,7 @@ function update(){
                     document.getElementById("avgHashrate").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
                     document.getElementById("avgHashrate-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["avgHashrate"]))
                         + unit["base"]["rate"];
+                    document.getElementById("hr-avg").innerHTML = config["avgRange"] + "hr. avg";
                     readyStatus["loadData"]["avgHashrate"] = 1
                 }
                 lastAvgSpeed = Number(data["avgHashrate"]);
@@ -214,15 +220,10 @@ function update(){
         success: function(data){
             data = JSON.parse(data);
             console.log(data);
-            if(isNumeric(data["prices"]["price_" + unit["base"]["currency"].toLowerCase()])){
-                var value = data["prices"]["price_" + unit["base"]["currency"].toLowerCase()];
+            if(isNumeric(data["prices"]["price_" + config["priceUnit"]])){
+                var value = data["prices"]["price_" + config["priceUnit"]];
                 document.getElementById("prices-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["prices"]))
-                    + unit["base"]["currency"];
-                if(config["priceUnit"] !== undefined){
-                    value = data["prices"]["price_" + config["priceUnit"]];
-                    document.getElementById("prices-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["prices"]))
                         + config["priceUnit"].toUpperCase();
-                }
                 console.log(value);
                 var level = getOrderOfMagnitudeF(value);
                 document.getElementById("prices").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
@@ -240,8 +241,8 @@ function update(){
             return 1;
         }
     }
-    setTimeout(update, 5*60*1000);
-    console.log("update interval set to 5 minutes");
+    setTimeout(update, Number(config["updateInterval"])*60*1000);
+    console.log("update interval set to " + config["updateInterval"] + " minutes");
     return 0;
 }
 function getOrderOfMagnitudeName(digit){//receiving a data, not data magnitude

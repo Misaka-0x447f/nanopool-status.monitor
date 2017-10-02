@@ -10,9 +10,9 @@ $coinType = $_GET["coinType"];
 $address = $_GET["address"];
 $dataType = $_GET["dataType"];
 $speed = $_GET["speed"];
-$period = 2;
-if(isset($_GET["period"])){
-    $period = $_GET["period"];
+$avgRange = 6;
+if(isset($_GET["avgRange"])){
+    $avgRange = $_GET["avgRange"];
 }
 //error control located in pool.php
 
@@ -28,7 +28,7 @@ if($dataType === "hashrateHistory"){
 
 }
 if($dataType === "avgHashrate"){
-    exit(json_encode($poolOpt->minerAverageHashrate($period)));
+    exit(json_encode($poolOpt->minerAverageHashrate($avgRange)));
 }
 if($dataType === "estimatedEarnings" and isset($speed) and (int)$speed > 0){
     exit(json_encode($poolOpt->minerEstimatedEarnings($speed)));
