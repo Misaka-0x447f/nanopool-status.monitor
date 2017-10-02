@@ -17,6 +17,9 @@ if(isset($_GET["avgRange"])){
 //error control located in pool.php
 
 $poolOpt = new nanopoolEtcEth($coinType, $address);
+if($dataType === "balance_hashrate"){
+    exit(json_encode($poolOpt->minerBalanceAndHashrate()));
+}
 if($dataType === "balance"){
     exit(json_encode($poolOpt->minerAccountBalance()));
 }

@@ -9,7 +9,7 @@ function update(){
     if(config["updateInterval"] === undefined){
         config["updateInterval"] = 5;
     }
-    var arg = window.location.href.split("?") + "/../api/interface.php?coinType=" + config["coinType"] + "&address=" + config["address"];
+    arg = window.location.href.split("?") + "/../api/interface.php?coinType=" + config["coinType"] + "&address=" + config["address"];
 
     $("html").css("font-size", 60*(document.body.offsetWidth/1920) + "px");
 
@@ -93,18 +93,18 @@ function update(){
         }
     };
 
-    //1.update balance
+    //1.update balance 2.update hashrate
     console.log("requesting");
     $.ajax({
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
         dataType: "html",
-        url: arg + "&dataType=balance",
+        url: arg + "&dataType=balance_hashrate",
         success: function(data){
             data = JSON.parse(data);
             console.log(data);
-            if(isNumeric(data["balance"])){
-                var value = Number(data["balance"]);
+            if(isNumeric(data["data"]["balance"])){
+                value = Number(data["data"]["balance"]);
                 var level = getOrderOfMagnitudeF(value);
                 document.getElementById("balance").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
                 document.getElementById("balance-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["balance"]))
@@ -112,23 +112,10 @@ function update(){
                 //changeReadyStatus
                 readyStatus["loadData"]["balance"] = 1
             }
-        },
-        timeout:90000
-    });
-
-    //2.update hashrate
-    $.ajax({
-        type: "POST",
-        contentType: "application/x-www-form-urlencoded",
-        dataType: "html",
-        url: arg + "&dataType=hashrate",
-        success: function(data){
-            data = JSON.parse(data);
-            console.log(data);
-            if(isNumeric(data["hashrate"])){
-                var value = Number(data["hashrate"]);
+            if(isNumeric(data["data"]["hashrate"])){
+                value = Number(data["data"]["hashrate"]);
                 console.log(value);
-                var level = getOrderOfMagnitudeF(value);
+                level = getOrderOfMagnitudeF(value);
                 document.getElementById("hashrate").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
                 document.getElementById("hashrate-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["hashrate"]))
                     + unit["base"]["rate"];
