@@ -7,7 +7,7 @@ function update(){
         config["avgRange"] = 6;
     }
     if(config["updateInterval"] === undefined){
-        config["updateInterval"] = 5;
+        config["updateInterval"] = 10;
     }
     arg = window.location.href.split("?") + "/../api/interface.php?coinType=" + config["coinType"] + "&address=" + config["address"];
 
@@ -81,20 +81,24 @@ function update(){
             }
         }
     }
-    //record readyStatus
-    readyStatus = {
-        "loadData":{
-            "balance":0,
-            "hashrate":0,
-            "avgHashrate":0,
-            "estimatedEarns":0,
-            "payments":0,
-            "prices":0
-        }
-    };
 
     //1.update balance 2.update hashrate
-    console.log("requesting");
+    updateBalanceAndHashrate();
+
+    //3.update avgHashrate
+    updateAvgHashrate();
+
+    //4.update calc
+    updateCalc();
+
+    //5.update total-payments
+    updateTotalPayments();
+
+    //6.update prices
+    updatePrices();
+
+}
+function updateBalanceAndHashrate(){
     $.ajax({
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
@@ -103,29 +107,44 @@ function update(){
         success: function(data){
             data = JSON.parse(data);
             console.log(data);
-            if(isNumeric(data["data"]["balance"])){
-                value = Number(data["data"]["balance"]);
-                var level = getOrderOfMagnitudeF(value);
-                document.getElementById("balance").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
-                document.getElementById("balance-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["balance"]))
+            if(data.hasOwnProperty("data", "balance") && isNumeric(data["data"]["balance"])){
+                var value1 = Number(data["data"]["balance"]);
+                var level1 = getOrderOfMagnitudeF(value1);
+                document.getElementById("balance").innerHTML = (value1*Math.pow(10,-level1)).toPrecision(4);
+                document.getElementById("balance-unit").innerHTML = getOrderOfMagnitudeName(value1 * Math.pow(10, unit["api"]["balance"]))
                     + unit["base"]["coin"];
-                //changeReadyStatus
-                readyStatus["loadData"]["balance"] = 1
+            }else{
+                return retryBalanceAndHashrate();
             }
-            if(isNumeric(data["data"]["hashrate"])){
-                value = Number(data["data"]["hashrate"]);
-                console.log(value);
-                level = getOrderOfMagnitudeF(value);
-                document.getElementById("hashrate").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
-                document.getElementById("hashrate-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["hashrate"]))
+            if(data.hasOwnProperty("data") && data["data"].hasOwnProperty("hashrate") && isNumeric(data["data"]["hashrate"])){
+                var value2 = Number(data["data"]["hashrate"]);
+                console.log(value2);
+                var level2 = getOrderOfMagnitudeF(value2);
+                document.getElementById("hashrate").innerHTML = (value2*Math.pow(10,-level2)).toPrecision(4);
+                document.getElementById("hashrate-unit").innerHTML = getOrderOfMagnitudeName(value2 * Math.pow(10, unit["api"]["hashrate"]))
                     + unit["base"]["rate"];
-                readyStatus["loadData"]["hashrate"] = 1
+            }else{
+                return retryBalanceAndHashrate();
             }
+            successBalanceAndHashrate();
         },
-        timeout:90000
+        error: function(){
+            return retryBalanceAndHashrate();
+        },
+        timeout:30000
     });
-
-    //3.update avgHashrate
+    function retryBalanceAndHashrate(){
+        setTimeout(updateBalanceAndHashrate, 30*1000);
+        console.log("retry in 30 seconds");
+        return false;
+    }
+    function successBalanceAndHashrate(){
+        setTimeout(updateBalanceAndHashrate, Number(config["updateInterval"])*60*1000);
+        console.log("update interval set to " + config["updateInterval"] + " minutes");
+        return true;
+    }
+}
+function updateAvgHashrate(){
     $.ajax({
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
@@ -135,7 +154,7 @@ function update(){
             data = JSON.parse(data);
             if(data["status"] === "ok"){
                 console.log(data);
-                if(isNumeric(data["avgHashrate"])){
+                if(data.hasOwnProperty("avgHashrate") && isNumeric(data["avgHashrate"])){
                     var value = Number(data["avgHashrate"]);
                     console.log(value);
                     var level = getOrderOfMagnitudeF(value);
@@ -143,17 +162,31 @@ function update(){
                     document.getElementById("avgHashrate-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["avgHashrate"]))
                         + unit["base"]["rate"];
                     document.getElementById("hr-avg").innerHTML = config["avgRange"] + "hr. avg";
-                    readyStatus["loadData"]["avgHashrate"] = 1
                 }
                 lastAvgSpeed = Number(data["avgHashrate"]);
+            }else{
+                retryAvgHashrate();
             }
+            successAvgHashrate();
         },
-        timeout:90000
+        error: function () {
+            retryAvgHashrate();
+        },
+        timeout:30000
     });
-
-    
+    function retryAvgHashrate(){
+        setTimeout(updateAvgHashrate, 30*1000);
+        console.log("retry in 30 seconds");
+        return false;
+    }
+    function successAvgHashrate(){
+        setTimeout(updateAvgHashrate, Number(config["updateInterval"])*60*1000);
+        console.log("update interval set to " + config["updateInterval"] + " minutes");
+        return true;
+    }
+}
+function updateCalc(){
     if(typeof(lastAvgSpeed) === "number"){
-        //4.update calc
         $.ajax({
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
@@ -162,21 +195,36 @@ function update(){
             success: function(data){
                 data = JSON.parse(data);
                 console.log(data);
-                if(isNumeric(data["estimatedEarnings"]["day"]["coins"])){
+                if(data.hasOwnProperty("estimatedEarnings", "day", "coins") && isNumeric(data["estimatedEarnings"]["day"]["coins"])){
                     var value = Number(data["estimatedEarnings"]["day"]["coins"]);
                     console.log(value);
                     var level = getOrderOfMagnitudeF(value);
                     document.getElementById("estimatedEarnings").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
                     document.getElementById("estimatedEarnings-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["estimatedEarnings"]))
                         + unit["base"]["coinRate"];
-                    readyStatus["loadData"]["estimatedEarnings"] = 1
+                }else{
+                    retryCalc();
                 }
+                successCalc();
+            },
+            error: function () {
+                retryCalc();
             },
             timeout:90000
         });
     }
-
-    //5.update total-payments
+    function retryCalc(){
+        setTimeout(updateCalc, 30*1000);
+        console.log("retry in 30 seconds");
+        return false;
+    }
+    function successCalc(){
+        setTimeout(updateCalc, Number(config["updateInterval"])*60*1000);
+        console.log("update interval set to " + config["updateInterval"] + " minutes");
+        return true;
+    }
+}
+function updateTotalPayments(){
     $.ajax({
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
@@ -192,13 +240,28 @@ function update(){
                 document.getElementById("payments").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
                 document.getElementById("payments-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["payments"]))
                     + unit["base"]["coin"];
-                readyStatus["loadData"]["payments"] = 1
+            }else{
+                retryTotalPayments();
             }
+            successTotalPayments();
+        },
+        error: function () {
+            retryTotalPayments();
         },
         timeout:90000
     });
-
-    //6.update prices
+    function retryTotalPayments(){
+        setTimeout(updateTotalPayments, 30*1000);
+        console.log("retry in 30 seconds");
+        return false;
+    }
+    function successTotalPayments(){
+        setTimeout(updateTotalPayments, Number(config["updateInterval"])*60*1000);
+        console.log("update interval set to " + config["updateInterval"] + " minutes");
+        return true;
+    }
+}
+function updatePrices(){
     $.ajax({
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
@@ -210,27 +273,30 @@ function update(){
             if(isNumeric(data["prices"]["price_" + config["priceUnit"]])){
                 var value = data["prices"]["price_" + config["priceUnit"]];
                 document.getElementById("prices-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["prices"]))
-                        + config["priceUnit"].toUpperCase();
+                    + config["priceUnit"].toUpperCase();
                 console.log(value);
                 var level = getOrderOfMagnitudeF(value);
                 document.getElementById("prices").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
-                readyStatus["loadData"]["prices"] = 1
+            }else{
+                retryPrices();
             }
+            successPrices();
+        },
+        error: function () {
+            retryPrices();
         },
         timeout:90000
     });
-
-    //check if all value ready
-    for (i in readyStatus){
-        if(i !== 1){
-            setTimeout(update, 20*1000);
-            console.log("update interval set to 20 seconds");
-            return 1;
-        }
+    function retryPrices(){
+        setTimeout(updatePrices, 30*1000);
+        console.log("retry in 30 seconds");
+        return false;
     }
-    setTimeout(update, Number(config["updateInterval"])*60*1000);
-    console.log("update interval set to " + config["updateInterval"] + " minutes");
-    return 0;
+    function successPrices(){
+        setTimeout(updatePrices, Number(config["updateInterval"])*60*1000);
+        console.log("update interval set to " + config["updateInterval"] + " minutes");
+        return true;
+    }
 }
 function getOrderOfMagnitudeName(digit){//receiving a data, not data magnitude
     digit = Number(digit);
@@ -247,7 +313,7 @@ function getOrderOfMagnitudeName(digit){//receiving a data, not data magnitude
 }
 function getOrderOfMagnitudeF(digit){
     digit = Number(digit);
-    value = getOrderOfMagnitude(digit);
+    var value = getOrderOfMagnitude(digit);
     value = Math.floor(value / 3) * 3;
     return value;
 }
@@ -259,7 +325,7 @@ function getOrderOfMagnitude(digit){
     return Math.log10(digit);
 }
 function isNumeric(n){
-    if(typeof n !== "undefined"){
+    if(n !== undefined){
         return !isNaN(parseFloat(n)) && isFinite(n);
     }else{
         return false;
