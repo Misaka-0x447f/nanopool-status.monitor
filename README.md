@@ -11,5 +11,10 @@ nanopool.org
 3. run index.php
 
 # how to use config profile
-/index.php                     // <- This will set profile to default
-/index.php&config=default      // <- You can specify profile here
+/index.php
+
+↑ This will set profile to default
+
+/index.php&config=default
+
+↑ You can specify profile using get method
