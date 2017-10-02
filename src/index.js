@@ -11,7 +11,7 @@ function update(){
     }
     arg = window.location.href.split("?") + "/../api/interface.php?coinType=" + config["coinType"] + "&address=" + config["address"];
 
-    $("html").css("font-size", 60*(document.body.offsetWidth/1920) + "px");
+    updateGUI();
 
     if(config["coinType"] === "etc"){
         unit = {
@@ -98,6 +98,10 @@ function update(){
     updatePrices();
 
 }
+function updateGUI(){
+    $("html").css("font-size", 60*(document.body.offsetWidth/1920) + "px");
+    setTimeout(updateGUI, 1000);
+}
 function updateBalanceAndHashrate(){
     $.ajax({
         type: "POST",
@@ -126,7 +130,7 @@ function updateBalanceAndHashrate(){
             }else{
                 return retryBalanceAndHashrate();
             }
-            successBalanceAndHashrate();
+            return successBalanceAndHashrate();
         },
         error: function(){
             return retryBalanceAndHashrate();
@@ -134,8 +138,8 @@ function updateBalanceAndHashrate(){
         timeout:30000
     });
     function retryBalanceAndHashrate(){
-        setTimeout(updateBalanceAndHashrate, 30*1000);
-        console.log("retry in 30 seconds");
+        setTimeout(updateBalanceAndHashrate, 15*1000);
+        console.log("retry in 15 seconds");
         return false;
     }
     function successBalanceAndHashrate(){
@@ -165,18 +169,18 @@ function updateAvgHashrate(){
                 }
                 lastAvgSpeed = Number(data["avgHashrate"]);
             }else{
-                retryAvgHashrate();
+                return retryAvgHashrate();
             }
-            successAvgHashrate();
+            return successAvgHashrate();
         },
         error: function () {
-            retryAvgHashrate();
+            return retryAvgHashrate();
         },
         timeout:30000
     });
     function retryAvgHashrate(){
-        setTimeout(updateAvgHashrate, 30*1000);
-        console.log("retry in 30 seconds");
+        setTimeout(updateAvgHashrate, 15*1000);
+        console.log("");
         return false;
     }
     function successAvgHashrate(){
@@ -186,7 +190,7 @@ function updateAvgHashrate(){
     }
 }
 function updateCalc(){
-    if(typeof(lastAvgSpeed) === "number"){
+    if(typeof(lastAvgSpeed) !== "undefined"){
         $.ajax({
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
@@ -203,19 +207,22 @@ function updateCalc(){
                     document.getElementById("estimatedEarnings-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["estimatedEarnings"]))
                         + unit["base"]["coinRate"];
                 }else{
-                    retryCalc();
+                    return retryCalc();
                 }
-                successCalc();
+                return successCalc();
             },
             error: function () {
-                retryCalc();
+                return retryCalc();
             },
             timeout:90000
         });
+    }else{
+        console.log("lastAvgSpeed is undefined");
+        return retryCalc();
     }
     function retryCalc(){
-        setTimeout(updateCalc, 30*1000);
-        console.log("retry in 30 seconds");
+        setTimeout(updateCalc, 15*1000);
+        console.log("");
         return false;
     }
     function successCalc(){
@@ -233,7 +240,7 @@ function updateTotalPayments(){
         success: function(data){
             data = JSON.parse(data);
             console.log(data);
-            if(isNumeric(data["sum"])){
+            if(data.hasOwnProperty("sum") && isNumeric(data["sum"])){
                 var value = Number(data["sum"]);
                 console.log(value);
                 var level = getOrderOfMagnitudeF(value);
@@ -241,18 +248,18 @@ function updateTotalPayments(){
                 document.getElementById("payments-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["payments"]))
                     + unit["base"]["coin"];
             }else{
-                retryTotalPayments();
+                return retryTotalPayments();
             }
-            successTotalPayments();
+            return successTotalPayments();
         },
         error: function () {
-            retryTotalPayments();
+            return retryTotalPayments();
         },
         timeout:90000
     });
     function retryTotalPayments(){
-        setTimeout(updateTotalPayments, 30*1000);
-        console.log("retry in 30 seconds");
+        setTimeout(updateTotalPayments, 15*1000);
+        console.log("");
         return false;
     }
     function successTotalPayments(){
@@ -270,7 +277,7 @@ function updatePrices(){
         success: function(data){
             data = JSON.parse(data);
             console.log(data);
-            if(isNumeric(data["prices"]["price_" + config["priceUnit"]])){
+            if(data.hasOwnProperty("prices", "price_" + config["priceUnit"]) && isNumeric(data["prices"]["price_" + config["priceUnit"]])){
                 var value = data["prices"]["price_" + config["priceUnit"]];
                 document.getElementById("prices-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["prices"]))
                     + config["priceUnit"].toUpperCase();
@@ -278,18 +285,18 @@ function updatePrices(){
                 var level = getOrderOfMagnitudeF(value);
                 document.getElementById("prices").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
             }else{
-                retryPrices();
+                return retryPrices();
             }
-            successPrices();
+            return successPrices();
         },
         error: function () {
-            retryPrices();
+            return retryPrices();
         },
         timeout:90000
     });
     function retryPrices(){
-        setTimeout(updatePrices, 30*1000);
-        console.log("retry in 30 seconds");
+        setTimeout(updatePrices, 15*1000);
+        console.log("");
         return false;
     }
     function successPrices(){
