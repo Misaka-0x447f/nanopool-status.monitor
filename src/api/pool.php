@@ -5,7 +5,9 @@
  * Date: 2017/9/24
  * Time: 17:23
  */
-require("functions.php");
+require("../lib/fileOpt.php");
+require("../lib/debugConsoleOpt.php");
+require("../lib/webOpt.php");
 class nanopoolEtcEth{
     public $typeOfApi;
     //set-able var

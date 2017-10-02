@@ -6,7 +6,8 @@
  * Date: 2017/9/24
  * Time: 17:18
  */
-require("functions.php");
+require("lib/fileOpt.php");
+require("lib/debugConsoleOpt.php");
 $fileOpt = new fileOpt();
 $fileOpt->fileSelect("config.json");
 $config = $fileOpt->jsonFileRead();
