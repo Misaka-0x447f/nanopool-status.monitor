@@ -18,7 +18,7 @@ function update(){
             "base":{
                 "coin":"ETC",
                 "rate":"hash/s",
-                "coinRate":"ETC/day"
+                "coinRate":"ETC/month"
             },
             "api":{                     // index of order of magnitude
                 "balance":0,
@@ -35,7 +35,7 @@ function update(){
             "base":{
                 "coin":"ETH",
                 "rate":"hash/s",
-                "coinRate":"ETH/day"
+                "coinRate":"ETH/month"
             },
             "api":{                     // index of order of magnitude
                 "balance":0,
@@ -52,7 +52,7 @@ function update(){
             "base":{
                 "coin":"XMR",
                 "rate":"hash/s",
-                "coinRate":"XMR/day"
+                "coinRate":"XMR/month"
             },
             "api":{                     // index of order of magnitude
                 "balance":0,
@@ -69,7 +69,7 @@ function update(){
             "base":{
                 "coin":"ZEC",
                 "rate":"sol/s",
-                "coinRate":"ZEC/day"
+                "coinRate":"ZEC/month"
             },
             "api":{                     // index of order of magnitude
                 "balance":0,
@@ -88,8 +88,8 @@ function update(){
     //3.update avgHashrate
     updateAvgHashrate();
 
-    //4.update calc
-    updateCalc();
+    //4.update calc: this will be done after avgHashrate refresh.
+    //updateCalc();
 
     //5.update total-payments
     updateTotalPayments();
@@ -184,6 +184,7 @@ function updateAvgHashrate(){
         return false;
     }
     function successAvgHashrate(){
+        updateCalc();
         setTimeout(updateAvgHashrate, Number(config["updateInterval"])*60*1000);
         console.log("update interval set to " + config["updateInterval"] + " minutes");
         return true;
@@ -226,9 +227,12 @@ function updateCalc(){
         return false;
     }
     function successCalc(){
+        //exec while request avgSpeed success.
+        /*
         setTimeout(updateCalc, Number(config["updateInterval"])*60*1000);
         console.log("update interval set to " + config["updateInterval"] + " minutes");
         return true;
+        */
     }
 }
 function updateTotalPayments(){
