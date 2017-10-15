@@ -7,7 +7,7 @@ function update(){
         config["avgRange"] = 6;
     }
     if(config["updateInterval"] === undefined){
-        config["updateInterval"] = 10;
+        config["updateInterval"] = 15;
     }
     arg = window.location.href.split("?") + "/../api/interface.php?coinType=" + config["coinType"] + "&address=" + config["address"];
 
