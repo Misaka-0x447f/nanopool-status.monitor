@@ -18,7 +18,7 @@ function update(){
             "base":{
                 "coin":"ETC",
                 "rate":"hash/s",
-                "coinRate":"ETC/month"
+                "coinRate":"ETC/day"
             },
             "api":{                     // index of order of magnitude
                 "balance":0,
@@ -35,7 +35,7 @@ function update(){
             "base":{
                 "coin":"ETH",
                 "rate":"hash/s",
-                "coinRate":"ETH/month"
+                "coinRate":"ETH/day"
             },
             "api":{                     // index of order of magnitude
                 "balance":0,
@@ -52,7 +52,7 @@ function update(){
             "base":{
                 "coin":"XMR",
                 "rate":"hash/s",
-                "coinRate":"XMR/month"
+                "coinRate":"XMR/day"
             },
             "api":{                     // index of order of magnitude
                 "balance":0,
@@ -69,7 +69,7 @@ function update(){
             "base":{
                 "coin":"ZEC",
                 "rate":"sol/s",
-                "coinRate":"ZEC/month"
+                "coinRate":"ZEC/day"
             },
             "api":{                     // index of order of magnitude
                 "balance":0,
