@@ -149,5 +149,8 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
             </td>
         </tr>
     </table>
+    <div id="console">
+
+    </div>
 </div>
 </body>

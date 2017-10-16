@@ -82,6 +82,33 @@ function update(){
         }
     }
 
+    netStatus = {
+        "balanceAndHashrate":{
+            "status":"null",
+            "retryCount":0
+        },
+        "avgHashrate":{
+            "status":"null",
+            "retryCount":0
+        },
+        "calc":{
+            "status":"null",
+            "retryCount":0
+        },
+        "totalPayments":{
+            "status":"null",
+            "retryCount":0
+        },
+        "prices":{
+            "status":"null",
+            "retryCount":0
+        }
+    };
+
+    netLastInfo = "initializing...";
+
+    RETRY_TIME_LIST=[15, 30, 60, 120, 300];
+
     //1.update balance 2.update hashrate
     updateBalanceAndHashrate();
 
@@ -102,7 +129,33 @@ function updateGUI(){
     $("html").css("font-size", 60*(document.body.offsetWidth/1920) + "px");
     setTimeout(updateGUI, 1000);
 }
+function txt(requests, txt1){
+    txtContent = {
+        "net_bah_requesting":"requesting balance and hashrate...",
+        "net_avg_requesting":"requesting average hashrate...",
+        "net_calc_requesting":"requesting mining speed...",
+        "net_payment_requesting":"requesting total payment...",
+        "net_price_requesting":"requesting prices...",
+        "net_bah_retry":"retry request balance and hashrate in " + txt1 + " seconds...",
+        "net_avg_retry":"retry request average hashrate in " + txt1 + " seconds...",
+        "net_calc_retry":"retry request mining speed in " + txt1 + " seconds...",
+        "net_payment_retry":"retry request total payment in " + txt1 + " seconds...",
+        "net_price_retry":"retry request price in " + txt1 + " seconds...",
+        "net_bah_success":"done request balance and hashrate.",
+        "net_avg_success":"done request average hashrate.",
+        "net_calc_success":"done request mining speed.",
+        "net_payment_success":"done request total payment.",
+        "net_price_success":"done request price.",
+        "net_missing_hashrate":"missing hashrate. cannot request mining speed."
+    };
+
+    document.getElementById("console").innerHTML = txtContent[requests];
+
+    return txtContent[requests];
+}
 function updateBalanceAndHashrate(){
+    netStatus["balanceAndHashrate"]["status"] = "requesting";
+    netLastInfo = txt("net_bah_requesting");
     $.ajax({
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
@@ -138,17 +191,27 @@ function updateBalanceAndHashrate(){
         timeout:30000
     });
     function retryBalanceAndHashrate(){
-        setTimeout(updateBalanceAndHashrate, 15*1000);
-        console.log("retry in 15 seconds");
+        timer = RETRY_TIME_LIST[netStatus["balanceAndHashrate"]["retryCount"]];
+        if(timer > 4){
+            timer = 4
+        }
+        setTimeout(updateBalanceAndHashrate, timer*1000);
+        netStatus["balanceAndHashrate"]["status"] = "retrying";
+        netStatus["balanceAndHashrate"]["retryCount"]++;
+        netLastInfo = txt("net_bah_retry", timer);
         return false;
     }
     function successBalanceAndHashrate(){
         setTimeout(updateBalanceAndHashrate, Number(config["updateInterval"])*60*1000);
-        console.log("update interval set to " + config["updateInterval"] + " minutes");
+        netStatus["balanceAndHashrate"]["status"] = "done";
+        netStatus["balanceAndHashrate"]["retryCount"] = 0;
+        netLastInfo = txt("net_bah_success");
         return true;
     }
 }
 function updateAvgHashrate(){
+    netStatus["avgHashrate"]["status"] = "requesting";
+    netLastInfo = txt("net_avg_requesting");
     $.ajax({
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
@@ -179,19 +242,28 @@ function updateAvgHashrate(){
         timeout:30000
     });
     function retryAvgHashrate(){
-        setTimeout(updateAvgHashrate, 15*1000);
-        console.log("");
+        timer = RETRY_TIME_LIST[netStatus["avgHashrate"]["retryCount"]];
+        if(timer > 4){
+            timer = 4
+        }
+        setTimeout(updateAvgHashrate, timer*1000);
+        netStatus["avgHashrate"]["status"] = "retrying";
+        netStatus["avgHashrate"]["retryCount"]++;
+        netLastInfo = txt("net_avg_retry", timer);
         return false;
     }
     function successAvgHashrate(){
         updateCalc();
         setTimeout(updateAvgHashrate, Number(config["updateInterval"])*60*1000);
-        console.log("update interval set to " + config["updateInterval"] + " minutes");
+        netStatus["avgHashrate"]["status"] = "done";
+        netStatus["avgHashrate"]["retryCount"] = 0;
         return true;
     }
 }
 function updateCalc(){
     if(typeof(lastAvgSpeed) !== "undefined"){
+        netStatus["calc"]["status"] = "requesting";
+        netLastInfo = txt("net_calc_requesting");
         $.ajax({
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
@@ -218,24 +290,34 @@ function updateCalc(){
             timeout:90000
         });
     }else{
-        console.log("lastAvgSpeed is undefined");
+        netLastInfo = txt("net_missing_hashrate");
         return retryCalc();
     }
     function retryCalc(){
-        setTimeout(updateCalc, 15*1000);
-        console.log("");
+        timer = RETRY_TIME_LIST[netStatus["calc"]["retryCount"]];
+        if(timer > 4){
+            timer = 4
+        }
+        setTimeout(updateCalc, timer*1000);
+        netStatus["calc"]["status"] = "retrying";
+        netStatus["calc"]["retryCount"]++;
+        netLastInfo = txt("net_calc_retry", timer);
         return false;
     }
     function successCalc(){
+        netStatus["calc"]["status"] = "done";
+        netStatus["calc"]["retryCount"] = 0;
+        netLastInfo = txt("net_calc_success");
         //exec while request avgSpeed success.
         /*
         setTimeout(updateCalc, Number(config["updateInterval"])*60*1000);
-        console.log("update interval set to " + config["updateInterval"] + " minutes");
-        return true;
         */
+        return true;
     }
 }
 function updateTotalPayments(){
+    netStatus["totalPayments"]["status"] = "requesting";
+    netLastInfo = txt("net_payment_requesting");
     $.ajax({
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
@@ -262,17 +344,27 @@ function updateTotalPayments(){
         timeout:90000
     });
     function retryTotalPayments(){
-        setTimeout(updateTotalPayments, 15*1000);
-        console.log("");
+        timer = RETRY_TIME_LIST[netStatus["payments"]["retryCount"]];
+        if(timer > 4){
+            timer = 4
+        }
+        setTimeout(updateTotalPayments, timer*1000);
+        netStatus["payments"]["status"] = "retrying";
+        netStatus["payments"]["retryCount"]++;
+        netLastInfo = txt("net_payment_retry", timer);
         return false;
     }
     function successTotalPayments(){
         setTimeout(updateTotalPayments, Number(config["updateInterval"])*60*1000);
-        console.log("update interval set to " + config["updateInterval"] + " minutes");
+        netStatus["payments"]["status"] = "done";
+        netStatus["payments"]["retryCount"] = 0;
+        netLastInfo = txt("net_payment_success");
         return true;
     }
 }
 function updatePrices(){
+    netStatus["prices"]["status"] = "requesting";
+    netLastInfo = txt("net_price_requesting");
     $.ajax({
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
@@ -299,13 +391,21 @@ function updatePrices(){
         timeout:90000
     });
     function retryPrices(){
-        setTimeout(updatePrices, 15*1000);
-        console.log("");
+        timer = RETRY_TIME_LIST[netStatus["prices"]["retryCount"]];
+        if(timer > 4){
+            timer = 4
+        }
+        setTimeout(updatePrices, timer*1000);
+        netStatus["prices"]["status"] = "retrying";
+        netStatus["prices"]["retryCount"]++;
+        netLastInfo = txt("net_price_retry", timer);
         return false;
     }
     function successPrices(){
         setTimeout(updatePrices, Number(config["updateInterval"])*60*1000);
-        console.log("update interval set to " + config["updateInterval"] + " minutes");
+        netStatus["prices"]["status"] = "done";
+        netStatus["prices"]["retryCount"] = 0;
+        netLastInfo = txt("net_price_success");
         return true;
     }
 }
