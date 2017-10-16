@@ -107,7 +107,7 @@ function update(){
 
     netLastInfo = "initializing...";
 
-    RETRY_TIME_LIST=[15, 30, 60, 120, 300];
+    RETRY_TIME_LIST = [5, 15, 30, 60, 120];
 
     initialNetStyle();
 
@@ -215,10 +215,7 @@ function updateBalanceAndHashrate(){
         timeout:30000
     });
     function retryBalanceAndHashrate(){
-        timer = RETRY_TIME_LIST[netStatus["balanceAndHashrate"]["retryCount"]];
-        if(timer > 4){
-            timer = 4
-        }
+        timer = RETRY_TIME_LIST[limitRange(netStatus["balanceAndHashrate"]["retryCount"], 0, RETRY_TIME_LIST.length - 1)];
         setTimeout(updateBalanceAndHashrate, timer*1000);
         netStatus["balanceAndHashrate"]["status"] = "retrying";
         netStatus["balanceAndHashrate"]["retryCount"]++;
@@ -271,10 +268,7 @@ function updateAvgHashrate(){
         timeout:30000
     });
     function retryAvgHashrate(){
-        timer = RETRY_TIME_LIST[netStatus["avgHashrate"]["retryCount"]];
-        if(timer > 4){
-            timer = 4
-        }
+        timer = RETRY_TIME_LIST[limitRange(netStatus["avgHashrate"]["retryCount"], 0, RETRY_TIME_LIST.length - 1)];
         setTimeout(updateAvgHashrate, timer*1000);
         netStatus["avgHashrate"]["status"] = "retrying";
         netStatus["avgHashrate"]["retryCount"]++;
@@ -326,10 +320,7 @@ function updateCalc(){
         return retryCalc();
     }
     function retryCalc(){
-        timer = RETRY_TIME_LIST[netStatus["calc"]["retryCount"]];
-        if(timer > 4){
-            timer = 4
-        }
+        timer = RETRY_TIME_LIST[limitRange(netStatus["calc"]["retryCount"], 0, RETRY_TIME_LIST.length - 1)];
         setTimeout(updateCalc, timer*1000);
         netStatus["calc"]["status"] = "retrying";
         netStatus["calc"]["retryCount"]++;
@@ -379,10 +370,7 @@ function updateTotalPayments(){
         timeout:90000
     });
     function retryTotalPayments(){
-        timer = RETRY_TIME_LIST[netStatus["totalPayments"]["retryCount"]];
-        if(timer > 4){
-            timer = 4
-        }
+        timer = RETRY_TIME_LIST[limitRange(netStatus["totalPayments"]["retryCount"], 0, RETRY_TIME_LIST.length - 1)];
         setTimeout(updateTotalPayments, timer*1000);
         netStatus["totalPayments"]["status"] = "retrying";
         netStatus["totalPayments"]["retryCount"]++;
@@ -429,10 +417,7 @@ function updatePrices(){
         timeout:90000
     });
     function retryPrices(){
-        timer = RETRY_TIME_LIST[netStatus["prices"]["retryCount"]];
-        if(timer > 4){
-            timer = 4
-        }
+        timer = RETRY_TIME_LIST[limitRange(netStatus["prices"]["retryCount"], 0, RETRY_TIME_LIST.length - 1)];
         setTimeout(updatePrices, timer*1000);
         netStatus["prices"]["status"] = "retrying";
         netStatus["prices"]["retryCount"]++;
@@ -481,4 +466,13 @@ function isNumeric(n){
     }else{
         return false;
     }
+}
+function limitRange(variable, floor, ceil){
+    if(variable < floor){
+        variable = floor
+    }
+    if(variable > ceil){
+        variable = ceil
+    }
+    return variable
 }

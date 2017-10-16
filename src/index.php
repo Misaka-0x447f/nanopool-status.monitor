@@ -25,7 +25,7 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
 </title>
 <link href="index.css<?php echo "?nocache=" . (string)rand() ?>" rel="stylesheet">
 <script src="index.js<?php echo "?nocache=" . (string)rand() ?>"></script>
-<script src="lib/jquery.js<?php echo "?nocache=" . (string)rand() ?>"></script>
+<script src="lib/jquery.js"></script>
 <script>
     $(document).ready(function () {
         setTimeout(update, 3 * 1000);
