@@ -109,6 +109,8 @@ function update(){
 
     RETRY_TIME_LIST=[15, 30, 60, 120, 300];
 
+    initialNetStyle();
+
     //1.update balance 2.update hashrate
     updateBalanceAndHashrate();
 
@@ -153,9 +155,31 @@ function txt(requests, txt1){
 
     return txtContent[requests];
 }
+function setNetStyle(id, style){
+    if(style === "init"){
+        document.getElementById(id).style.color = "#57a";
+    }else if(style === "done"){
+        document.getElementById(id).style.color = "#6cf";
+    }else if(style === "requesting"){
+        document.getElementById(id).style.color = "#5fc";
+    }else if(style === "retrying"){
+        document.getElementById(id).style.color = "#e75";
+    }
+}
+function initialNetStyle(){
+    setNetStyle("balance", "init");
+    setNetStyle("hashrate", "init");
+    setNetStyle("avgHashrate", "init");
+    setNetStyle("estimatedEarnings", "init");
+    setNetStyle("payments", "init");
+    setNetStyle("prices", "init");
+}
+
 function updateBalanceAndHashrate(){
     netStatus["balanceAndHashrate"]["status"] = "requesting";
     netLastInfo = txt("net_bah_requesting");
+    setNetStyle("balance", "requesting");
+    setNetStyle("hashrate", "requesting");
     $.ajax({
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
@@ -199,6 +223,8 @@ function updateBalanceAndHashrate(){
         netStatus["balanceAndHashrate"]["status"] = "retrying";
         netStatus["balanceAndHashrate"]["retryCount"]++;
         netLastInfo = txt("net_bah_retry", timer);
+        setNetStyle("balance", "retrying");
+        setNetStyle("hashrate", "retrying");
         return false;
     }
     function successBalanceAndHashrate(){
@@ -206,12 +232,15 @@ function updateBalanceAndHashrate(){
         netStatus["balanceAndHashrate"]["status"] = "done";
         netStatus["balanceAndHashrate"]["retryCount"] = 0;
         netLastInfo = txt("net_bah_success");
+        setNetStyle("balance", "done");
+        setNetStyle("hashrate", "done");
         return true;
     }
 }
 function updateAvgHashrate(){
     netStatus["avgHashrate"]["status"] = "requesting";
     netLastInfo = txt("net_avg_requesting");
+    setNetStyle("avgHashrate", "requesting");
     $.ajax({
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
@@ -250,6 +279,7 @@ function updateAvgHashrate(){
         netStatus["avgHashrate"]["status"] = "retrying";
         netStatus["avgHashrate"]["retryCount"]++;
         netLastInfo = txt("net_avg_retry", timer);
+        setNetStyle("avgHashrate", "retrying");
         return false;
     }
     function successAvgHashrate(){
@@ -257,6 +287,7 @@ function updateAvgHashrate(){
         setTimeout(updateAvgHashrate, Number(config["updateInterval"])*60*1000);
         netStatus["avgHashrate"]["status"] = "done";
         netStatus["avgHashrate"]["retryCount"] = 0;
+        setNetStyle("avgHashrate", "done");
         return true;
     }
 }
@@ -264,6 +295,7 @@ function updateCalc(){
     if(typeof(lastAvgSpeed) !== "undefined"){
         netStatus["calc"]["status"] = "requesting";
         netLastInfo = txt("net_calc_requesting");
+        setNetStyle("estimatedEarnings", "requesting");
         $.ajax({
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
@@ -302,12 +334,14 @@ function updateCalc(){
         netStatus["calc"]["status"] = "retrying";
         netStatus["calc"]["retryCount"]++;
         netLastInfo = txt("net_calc_retry", timer);
+        setNetStyle("estimatedEarnings", "retrying");
         return false;
     }
     function successCalc(){
         netStatus["calc"]["status"] = "done";
         netStatus["calc"]["retryCount"] = 0;
         netLastInfo = txt("net_calc_success");
+        setNetStyle("estimatedEarnings", "done");
         //exec while request avgSpeed success.
         /*
         setTimeout(updateCalc, Number(config["updateInterval"])*60*1000);
@@ -318,6 +352,7 @@ function updateCalc(){
 function updateTotalPayments(){
     netStatus["totalPayments"]["status"] = "requesting";
     netLastInfo = txt("net_payment_requesting");
+    setNetStyle("payments", "requesting");
     $.ajax({
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
@@ -344,27 +379,30 @@ function updateTotalPayments(){
         timeout:90000
     });
     function retryTotalPayments(){
-        timer = RETRY_TIME_LIST[netStatus["payments"]["retryCount"]];
+        timer = RETRY_TIME_LIST[netStatus["totalPayments"]["retryCount"]];
         if(timer > 4){
             timer = 4
         }
         setTimeout(updateTotalPayments, timer*1000);
-        netStatus["payments"]["status"] = "retrying";
-        netStatus["payments"]["retryCount"]++;
+        netStatus["totalPayments"]["status"] = "retrying";
+        netStatus["totalPayments"]["retryCount"]++;
         netLastInfo = txt("net_payment_retry", timer);
+        setNetStyle("payments", "retrying");
         return false;
     }
     function successTotalPayments(){
         setTimeout(updateTotalPayments, Number(config["updateInterval"])*60*1000);
-        netStatus["payments"]["status"] = "done";
-        netStatus["payments"]["retryCount"] = 0;
+        netStatus["totalPayments"]["status"] = "done";
+        netStatus["totalPayments"]["retryCount"] = 0;
         netLastInfo = txt("net_payment_success");
+        setNetStyle("payments", "done");
         return true;
     }
 }
 function updatePrices(){
     netStatus["prices"]["status"] = "requesting";
     netLastInfo = txt("net_price_requesting");
+    setNetStyle("prices", "requesting");
     $.ajax({
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
@@ -399,6 +437,7 @@ function updatePrices(){
         netStatus["prices"]["status"] = "retrying";
         netStatus["prices"]["retryCount"]++;
         netLastInfo = txt("net_price_retry", timer);
+        setNetStyle("prices", "retrying");
         return false;
     }
     function successPrices(){
@@ -406,6 +445,7 @@ function updatePrices(){
         netStatus["prices"]["status"] = "done";
         netStatus["prices"]["retryCount"] = 0;
         netLastInfo = txt("net_price_success");
+        setNetStyle("prices", "done");
         return true;
     }
 }
