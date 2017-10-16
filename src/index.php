@@ -23,7 +23,7 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
 <title>
     sitBackAndControl
 </title>
-<link href="index.css" rel="stylesheet">
+<link href="index.css<?php echo "?nocache=" . (string)rand() ?>" rel="stylesheet">
 <script src="index.js<?php echo "?nocache=" . (string)rand() ?>"></script>
 <script src="lib/jquery.js<?php echo "?nocache=" . (string)rand() ?>"></script>
 <script>
@@ -149,7 +149,7 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
             </td>
         </tr>
     </table>
-    <div id="console">
+    <div id="console" style="display: none">
 
     </div>
 </div>
