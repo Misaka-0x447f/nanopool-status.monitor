@@ -141,7 +141,7 @@ function updateGUI(){
     }
     document.getElementById("progress-bar").style.width = "17.7rem";
     document.getElementById("progress-bar-inner").style.width = (min - Date.now()) / (config["updateInterval"] * 60 * 1000) * 17.7 + "rem";
-    setTimeout(updateGUI, 500);
+    setTimeout(updateGUI, 200);
 }
 function txt(requests, txt1){
     txtContent = {
