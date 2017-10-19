@@ -134,14 +134,13 @@ function update(){
 }
 function updateGUI(){
     $("html").css("font-size", 60*(window_width()/1920) + "px");
-    var maximum = 0;
     for(i in netStatus){
-        if(netStatus.hasOwnProperty(i) && netStatus[i].hasOwnProperty("nextUpdate") && netStatus[i]["nextUpdate"] > maximum){
-            maximum = netStatus[i]["nextUpdate"];
+        if(netStatus.hasOwnProperty(i) && netStatus[i].hasOwnProperty("nextUpdate") && (min === undefined || netStatus[i]["nextUpdate"] < min)){
+            var min = netStatus[i]["nextUpdate"];
         }
     }
     document.getElementById("progress-bar").style.width = "17.7rem";
-    document.getElementById("progress-bar-inner").style.width = (maximum - Date.now()) / (config["updateInterval"] * 60 * 1000) * 17.7 + "rem";
+    document.getElementById("progress-bar-inner").style.width = (min - Date.now()) / (config["updateInterval"] * 60 * 1000) * 17.7 + "rem";
     setTimeout(updateGUI, 500);
 }
 function txt(requests, txt1){
