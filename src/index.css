@@ -58,3 +58,14 @@ table{
     font-size: 0.5rem;
     text-align: center;
 }
+#progress-bar{
+    background-color: #47a;
+}
+#progress-bar-inner{
+    background-color: #6cf;
+}
+#progress-bar, #progress-bar-inner{
+    position: fixed;
+    top: 0;
+    height: 1.5rem;
+}

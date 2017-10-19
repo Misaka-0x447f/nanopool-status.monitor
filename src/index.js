@@ -7,11 +7,9 @@ function update(){
         config["avgRange"] = 6;
     }
     if(config["updateInterval"] === undefined){
-        config["updateInterval"] = 15;
+        config["updateInterval"] = 5;
     }
     arg = window.location.href.split("?") + "/../api/interface.php?coinType=" + config["coinType"] + "&address=" + config["address"];
-
-    updateGUI();
 
     if(config["coinType"] === "etc"){
         unit = {
@@ -85,23 +83,28 @@ function update(){
     netStatus = {
         "balanceAndHashrate":{
             "status":"null",
-            "retryCount":0
+            "retryCount":0,
+            "nextUpdate":0           //millionSeconds
         },
         "avgHashrate":{
             "status":"null",
-            "retryCount":0
+            "retryCount":0,
+            "nextUpdate":0
         },
         "calc":{
             "status":"null",
-            "retryCount":0
+            "retryCount":0,
+            "nextUpdate":0
         },
         "totalPayments":{
             "status":"null",
-            "retryCount":0
+            "retryCount":0,
+            "nextUpdate":0
         },
         "prices":{
             "status":"null",
-            "retryCount":0
+            "retryCount":0,
+            "nextUpdate":0
         }
     };
 
@@ -110,6 +113,8 @@ function update(){
     RETRY_TIME_LIST = [5, 15, 30, 60, 120];
 
     initialNetStyle();
+
+    updateGUI();
 
     //1.update balance 2.update hashrate
     updateBalanceAndHashrate();
@@ -128,8 +133,16 @@ function update(){
 
 }
 function updateGUI(){
-    $("html").css("font-size", 60*(document.body.offsetWidth/1920) + "px");
-    setTimeout(updateGUI, 1000);
+    $("html").css("font-size", 60*(window_width()/1920) + "px");
+    var maximum = 0;
+    for(i in netStatus){
+        if(netStatus.hasOwnProperty(i) && netStatus[i].hasOwnProperty("nextUpdate") && netStatus[i]["nextUpdate"] > maximum){
+            maximum = netStatus[i]["nextUpdate"];
+        }
+    }
+    document.getElementById("progress-bar").style.width = "17.7rem";
+    document.getElementById("progress-bar-inner").style.width = (maximum - Date.now()) / (config["updateInterval"] * 60 * 1000) * 17.7 + "rem";
+    setTimeout(updateGUI, 500);
 }
 function txt(requests, txt1){
     txtContent = {
@@ -157,13 +170,13 @@ function txt(requests, txt1){
 }
 function setNetStyle(id, style){
     if(style === "init"){
-        document.getElementById(id).style.color = "#57a";
+        document.getElementById(id).style.color = "#236";
     }else if(style === "done"){
         document.getElementById(id).style.color = "#6cf";
     }else if(style === "requesting"){
-        document.getElementById(id).style.color = "#5fc";
+        document.getElementById(id).style.color = "#57a";
     }else if(style === "retrying"){
-        document.getElementById(id).style.color = "#e75";
+        document.getElementById(id).style.color = "#fe4";
     }
 }
 function initialNetStyle(){
@@ -222,6 +235,7 @@ function updateBalanceAndHashrate(){
         netLastInfo = txt("net_bah_retry", timer);
         setNetStyle("balance", "retrying");
         setNetStyle("hashrate", "retrying");
+        netStatus["balanceAndHashrate"]["nextUpdate"] = Date.now() + timer * 1000;
         return false;
     }
     function successBalanceAndHashrate(){
@@ -231,6 +245,7 @@ function updateBalanceAndHashrate(){
         netLastInfo = txt("net_bah_success");
         setNetStyle("balance", "done");
         setNetStyle("hashrate", "done");
+        netStatus["balanceAndHashrate"]["nextUpdate"] = Date.now() + Number(config["updateInterval"])*60*1000;
         return true;
     }
 }
@@ -274,6 +289,7 @@ function updateAvgHashrate(){
         netStatus["avgHashrate"]["retryCount"]++;
         netLastInfo = txt("net_avg_retry", timer);
         setNetStyle("avgHashrate", "retrying");
+        netStatus["avgHashrate"]["nextUpdate"] = Date.now() + timer * 1000;
         return false;
     }
     function successAvgHashrate(){
@@ -282,6 +298,7 @@ function updateAvgHashrate(){
         netStatus["avgHashrate"]["status"] = "done";
         netStatus["avgHashrate"]["retryCount"] = 0;
         setNetStyle("avgHashrate", "done");
+        netStatus["avgHashrate"]["nextUpdate"] = Date.now() + Number(config["updateInterval"])*60*1000;
         return true;
     }
 }
@@ -326,6 +343,7 @@ function updateCalc(){
         netStatus["calc"]["retryCount"]++;
         netLastInfo = txt("net_calc_retry", timer);
         setNetStyle("estimatedEarnings", "retrying");
+        netStatus["calc"]["nextUpdate"] = Date.now() + timer * 1000;
         return false;
     }
     function successCalc(){
@@ -333,6 +351,7 @@ function updateCalc(){
         netStatus["calc"]["retryCount"] = 0;
         netLastInfo = txt("net_calc_success");
         setNetStyle("estimatedEarnings", "done");
+        netStatus["calc"]["nextUpdate"] = Date.now() + Number(config["updateInterval"])*60*1000;
         //exec while request avgSpeed success.
         /*
         setTimeout(updateCalc, Number(config["updateInterval"])*60*1000);
@@ -376,6 +395,7 @@ function updateTotalPayments(){
         netStatus["totalPayments"]["retryCount"]++;
         netLastInfo = txt("net_payment_retry", timer);
         setNetStyle("payments", "retrying");
+        netStatus["totalPayments"]["nextUpdate"] = Date.now() + timer * 1000;
         return false;
     }
     function successTotalPayments(){
@@ -384,6 +404,7 @@ function updateTotalPayments(){
         netStatus["totalPayments"]["retryCount"] = 0;
         netLastInfo = txt("net_payment_success");
         setNetStyle("payments", "done");
+        netStatus["totalPayments"]["nextUpdate"] = Date.now() + Number(config["updateInterval"])*60*1000;
         return true;
     }
 }
@@ -423,6 +444,7 @@ function updatePrices(){
         netStatus["prices"]["retryCount"]++;
         netLastInfo = txt("net_price_retry", timer);
         setNetStyle("prices", "retrying");
+        netStatus["prices"]["nextUpdate"] = Date.now() + timer * 1000;
         return false;
     }
     function successPrices(){
@@ -431,6 +453,7 @@ function updatePrices(){
         netStatus["prices"]["retryCount"] = 0;
         netLastInfo = txt("net_price_success");
         setNetStyle("prices", "done");
+        netStatus["prices"]["nextUpdate"] = Date.now() + Number(config["updateInterval"])*60*1000;
         return true;
     }
 }
@@ -475,4 +498,11 @@ function limitRange(variable, floor, ceil){
         variable = ceil
     }
     return variable
+}
+function window_width(){
+    return document.documentElement.clientWidth;
+    /*    return window.innerWidth
+        || document.documentElement.clientWidth
+        || document.body.clientWidth
+        || 0;*/
 }
