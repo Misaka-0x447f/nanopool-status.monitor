@@ -12,6 +12,16 @@
     "address": "57cda5f152e5da5c16952bc810ebee8235df7353",
     "priceUnit": "cny",
     "avgRange": 2,
-    "updateInterval": 2
+    "updateInterval": 2,
+    "moduleSelection":{
+      "left-top": "balance",
+      "left-mid": "calc",
+      "left-bottom": "payment",
+      "right-top": "avgHashrate",
+      "right-mid": "hashrate",
+      "right-bottom": "price"
+    },
+    "monitoredWorker": "misaka-447f"
+
   }
 }
