@@ -112,6 +112,7 @@ function update(){
     };
 
     netLastInfo = "initializing...";
+    lastHashrate = 1000;
 
     RETRY_TIME_LIST = [5, 15, 30, 60, 120];
 
@@ -144,7 +145,53 @@ function updateGUI(){
     }
     document.getElementById("progress-bar").style.width = "17.7rem";
     document.getElementById("progress-bar-inner").style.width = (min - Date.now()) / (config["updateInterval"] * 60 * 1000) * 17.7 + "rem";
-    setTimeout(updateGUI, 200);
+
+    var flashInterval = 800;
+    var flashPeriod   = 15000;
+    var flashTimes    = 3;
+    var flashColor    = ["ff", "44", "33"];
+    var flashFactor = limitRange(0.9 - ((Date.now() % flashPeriod) % flashInterval) / flashInterval, 0, 1); //-0.1..0.9
+    function flashGetColorFactor(color){
+        return (Math.floor(parseInt(color, 16) * flashFactor)).toString(16);
+    }
+    function flashGetColor(){
+        var color = "#";
+        for(i=0; i<3; i++) {
+            color += flashGetColorFactor(flashColor[i])
+        }
+        return color;
+    }
+
+    if(lastHashrate <= 0.1){
+        if(Date.now() % flashPeriod < flashInterval * flashTimes * 0.98){
+            document.body.style.backgroundColor = flashGetColor()
+        }else{
+            document.body.style.backgroundColor = "#000";
+        }
+
+        function setStyleRedBlack(idList){
+            for(i in idList){
+                if(idList.hasOwnProperty(i)){
+                    document.getElementById(idList[i]).style.color = "#000";
+                    document.getElementById(idList[i]).parentNode.style.backgroundColor = "#f43";
+                }
+            }
+        }
+        setStyleRedBlack(["hashrate-unit", "current", "hashrate"]);
+    }else{
+        document.body.style.backgroundColor = "#000";
+        function setStyleBlackRed(idList){
+            for(i in idList){
+                if(idList.hasOwnProperty(i)){
+                    document.getElementById(idList[i]).style.color = "#6cf";
+                    document.getElementById(idList[i]).parentNode.style.backgroundColor = "#000";
+                }
+            }
+        }
+        setStyleBlackRed(["hashrate-unit", "current", "hashrate"]);
+    }
+
+    setTimeout(updateGUI, 25);
 }
 function txt(requests, txt1){
     txtContent = {
@@ -214,6 +261,7 @@ function updateBalanceAndHashrate(){
             }
             if(data.hasOwnProperty("data") && data["data"].hasOwnProperty("hashrate") && isNumeric(data["data"]["hashrate"])){
                 var value2 = Number(data["data"]["hashrate"]);
+                lastHashrate = value2;
                 console.log(value2);
                 var level2 = getOrderOfMagnitudeF(value2);
                 document.getElementById("hashrate").innerHTML = (value2*Math.pow(10,-level2)).toPrecision(4);
