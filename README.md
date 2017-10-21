@@ -1,19 +1,54 @@
-# personalEthCtrlpanel
+## personalEthCtrlpanel
 <del>个人用ETH/ETC控制面板</del>
 
 an ETH/ETC/XMR/ZEC monitor that could be run on windows phone(with edge).
 
-# Env requirement
+## env requirement
 php 7.1
 
 nanopool.org
 
-# Deployment
-1. cp /src yourServer
-2. cp configExample.json config.json
-3. open index.php on your <del>chrome</del> browser
+## deployment
+cp /src yourServer
 
-# how to select profile that defined in config file
+## configure
+configExample.json is the config file for this program.
+
+you should do this to make config file before run.
+
+`cp configExample.json config.json`
+
+### params
+param with * is required
+
+coinType     *
+
+`can be "etc", "eth", "xmr" or "zec"`
+
+address      *
+
+`your wallet address`
+
+priceUnit
+
+`can be "cny", "usd", "eur", "rur" or "btc".`
+
+`come from nanopool.org`
+
+avgRange
+
+`work with module "avgHashrate".`
+
+`specify average hashrate range. unit: hour.`
+
+updateInterval
+
+`specify module update interval. unit: minute.`
+
+## run
+open index.php on your <del>chrome</del> browser
+
+## how to select profile that defined in config file
 /index.php
 
 ↑ This will select profile 'default'

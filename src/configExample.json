@@ -1,8 +1,4 @@
 {
-  "comment": "This is the example file of config.json. Rename it to config.json and change to correct info first. When no param '?config=', using the 'default'. If '?config=group1', using the group 1.",
-  "comment2": "the group default has all required params, and the group group1 has all valid params.",
-  "comment3": "coinType can be xmr, eth, etc, zec; priceUnit can be btc, usd, cny, eur, rur.",
-  "comment4": "the unit of aveRange is hours, typeof is 'integer'. the unit of updateInterval is minutes, typeof is 'float'.",
   "default":{
     "coinType": "etc",
     "address": "57cda5f152e5da5c16952bc810ebee8235df7353"
