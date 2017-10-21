@@ -9,6 +9,9 @@ function update(){
     if(config["updateInterval"] === undefined){
         config["updateInterval"] = 5;
     }
+    if(config["noUpdateTimerBar"] === "true"){
+        document.getElementById("progress-bar").style.display = "none"
+    }
     arg = window.location.href.split("?") + "/../api/interface.php?coinType=" + config["coinType"] + "&address=" + config["address"];
 
     if(config["coinType"] === "etc"){
@@ -175,7 +178,7 @@ function setNetStyle(id, style){
     }else if(style === "requesting"){
         document.getElementById(id).style.color = "#57a";
     }else if(style === "retrying"){
-        document.getElementById(id).style.color = "#fe4";
+        document.getElementById(id).style.color = "#f77";
     }
 }
 function initialNetStyle(){

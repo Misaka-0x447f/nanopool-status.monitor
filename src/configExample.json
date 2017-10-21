@@ -8,6 +8,7 @@
     "address": "57cda5f152e5da5c16952bc810ebee8235df7353",
     "priceUnit": "cny",
     "avgRange": 2,
-    "updateInterval": 2
+    "updateInterval": 2,
+    "noUpdateTimerBar": "true"
   }
 }

@@ -45,6 +45,10 @@ updateInterval
 
 `specify module update interval. unit: minute.`
 
+noUpdateTimerBar
+
+`true: hide update timer bar.`
+
 ## run
 open index.php on your <del>chrome</del> browser
 
