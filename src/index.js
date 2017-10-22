@@ -167,8 +167,6 @@ function updateGUI(){
         return color;
     }
 
-    console.log(flashGetColor());
-
     if(lastHashrate <= 0.1){
         if(Date.now() % flashPeriod < flashInterval * flashTimes * 0.95){
             document.body.style.backgroundColor = flashGetColor();
