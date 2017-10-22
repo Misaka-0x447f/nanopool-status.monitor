@@ -150,21 +150,28 @@ function updateGUI(){
     var flashPeriod   = 15000;
     var flashTimes    = 3;
     var flashColor    = ["ff", "44", "33"];
-    var flashFactor = limitRange(0.9 - ((Date.now() % flashPeriod) % flashInterval) / flashInterval, 0, 1); //-0.1..0.9
+    var flashFactor = 1 - ((Date.now() % flashPeriod) % flashInterval) / flashInterval; //0..1
+
     function flashGetColorFactor(color){
         return (Math.floor(parseInt(color, 16) * flashFactor)).toString(16);
     }
     function flashGetColor(){
         var color = "#";
         for(i=0; i<3; i++) {
-            color += flashGetColorFactor(flashColor[i])
+            var result = flashGetColorFactor(flashColor[i]);
+            if(result.length === 1){
+                result = "0" + result;
+            }
+            color += result;
         }
         return color;
     }
 
-    if(lastHashrate <= 0.1){
-        if(Date.now() % flashPeriod < flashInterval * flashTimes * 0.98){
-            document.body.style.backgroundColor = flashGetColor()
+    console.log(flashGetColor());
+
+    if(lastHashrate >= 0.1){
+        if(Date.now() % flashPeriod < flashInterval * flashTimes * 0.95){
+            document.body.style.backgroundColor = flashGetColor();
         }else{
             document.body.style.backgroundColor = "#000";
         }
