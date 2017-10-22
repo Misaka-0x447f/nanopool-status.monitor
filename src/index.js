@@ -267,6 +267,9 @@ function updateBalanceAndHashrate(){
             if(data.hasOwnProperty("data") && data["data"].hasOwnProperty("hashrate") && isNumeric(data["data"]["hashrate"])){
                 var value2 = Number(data["data"]["hashrate"]);
                 lastHashrate = value2;
+                if(lashHashrate === 0){
+                    return retryBalanceAndHashrate();
+                }
                 console.log(value2);
                 var level2 = getOrderOfMagnitudeF(value2);
                 document.getElementById("hashrate").innerHTML = (value2*Math.pow(10,-level2)).toPrecision(4);
