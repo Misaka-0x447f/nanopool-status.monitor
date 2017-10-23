@@ -35,13 +35,15 @@ class nanopoolEtcEth{
         if($paraValid !== true){
             return $paraValid;
         }
+
+        $this->counterPlusOne();
         if($this->isOverUsed()){
             return $this->error("400.5");
         }
+
         $result = $this->webOpt->post(array(
             "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/balance_hashrate/" . $this->minerAddress
         ));
-        $this->counterPlusOne();
         $rawResult = $result;
         $result = json_decode($result, true);
         $checkResult = $this->checkResult($result, $rawResult);
@@ -98,13 +100,16 @@ class nanopoolEtcEth{
         if($paraValid !== true){
             return $paraValid;
         }
+
+        $this->counterPlusOne();
         if($this->isOverUsed()){
             return $this->error("400.5");
         }
+
         $result = $this->webOpt->post(array(
             "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/avghashratelimited/" . $this->minerAddress . "/" . $hours
         ));
-        $this->counterPlusOne();
+
         $rawResult = $result;
         $result = json_decode($result, true);
         $checkResult = $this->checkResult($result, $rawResult);
@@ -126,13 +131,16 @@ class nanopoolEtcEth{
         if($paraValid !== true){
             return $paraValid;
         }
+
+        $this->counterPlusOne();
         if($this->isOverUsed()){
             return $this->error("400.5");
         }
+
         $result = $this->webOpt->post(array(
             "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/hashrate/" . $this->minerAddress
         ));
-        $this->counterPlusOne();
+
         $rawResult = $result;
         $result = json_decode($result, true);
         $checkResult = $this->checkResult($result, $rawResult);
@@ -158,13 +166,16 @@ class nanopoolEtcEth{
         if($paraValid !== true){
             return $paraValid;
         }
+
+        $this->counterPlusOne();
         if($this->isOverUsed()){
             return $this->error("400.5");
         }
+
         $result = $this->webOpt->post(array(
             "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/history/" . $this->minerAddress
         ));
-        $this->counterPlusOne();
+
         $rawResult = $result;
         $result = json_decode($result, true);
         $checkResult = $this->checkResult($result, $rawResult);
@@ -185,9 +196,12 @@ class nanopoolEtcEth{
         if($hashrates === null){
             return $this->error("400.3");
         }
+
+        $this->counterPlusOne();
         if($this->isOverUsed()){
             return $this->error("400.5");
         }
+
         $paraValid = $this->presetParameterValid();
         if($paraValid !== true){
             return $paraValid;
@@ -195,7 +209,7 @@ class nanopoolEtcEth{
         $result = $this->webOpt->post(array(
             "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/approximated_earnings/" . $hashrates
         ));
-        $this->counterPlusOne();
+
         $rawResult = $result;
         $result = json_decode($result, true);
         $checkResult = $this->checkResult($result, $rawResult);
@@ -221,13 +235,16 @@ class nanopoolEtcEth{
         if($paraValid !== true){
             return $paraValid;
         }
+
+        $this->counterPlusOne();
         if($this->isOverUsed()){
             return $this->error("400.5");
         }
+
         $result = $this->webOpt->post(array(
             "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/payments/" . $this->minerAddress
         ));
-        $this->counterPlusOne();
+
         $rawResult = $result;
         $result = json_decode($result, true);
         $checkResult = $this->checkResult($result, $rawResult);
@@ -250,13 +267,16 @@ class nanopoolEtcEth{
         return $this->error("500.0");
     }
     public function prices(){
+
+        $this->counterPlusOne();
         if($this->isOverUsed()){
             return $this->error("400.5");
         }
+
         $result = $this->webOpt->post(array(
             "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/prices"
         ));
-        $this->counterPlusOne();
+
         $rawResult = $result;
         $result = json_decode($result, true);
         $checkResult = $this->checkResult($result, $rawResult);
@@ -283,7 +303,7 @@ class nanopoolEtcEth{
     }
     private function isOverUsed(){
         $this->checkMinutePassed();
-        if($this->fileOpt->jsonFileRead("counter") >= 30){
+        if($this->fileOpt->jsonFileRead("counter") >= 15){
             return true;
         }
         return false;
@@ -367,7 +387,7 @@ class nanopoolEtcEth{
         }
         if($statusNo === "400.5"){
             $requests = $this->fileOpt->jsonFileRead("counter");
-            $data["message"] = "the api was over used in recent one minute. " . $requests . " of 30 requests was made recently. cool down required.";
+            $data["message"] = "the api was over used in recent one minute. " . $requests . " of 15 requests was made recently. cool down required.";
         }
         if($statusNo === "404.1"){
             $data["message"] = "miner address was not found on pool server";
