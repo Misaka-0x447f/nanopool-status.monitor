@@ -153,6 +153,9 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
 
     </div>
     <div id="progress-bar">
+        <span id="progress-bar-flag">
+
+        </span>
         <div id="progress-bar-inner">
 
         </div>
