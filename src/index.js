@@ -253,32 +253,36 @@ function updateBalanceAndHashrate(){
         dataType: "html",
         url: arg + "&dataType=balance_hashrate",
         success: function(data){
-            data = JSON.parse(data);
-            console.log(data);
-            if(data.hasOwnProperty("data", "balance") && isNumeric(data["data"]["balance"])){
-                var value1 = Number(data["data"]["balance"]);
-                var level1 = getOrderOfMagnitudeF(value1);
-                document.getElementById("balance").innerHTML = (value1*Math.pow(10,-level1)).toPrecision(4);
-                document.getElementById("balance-unit").innerHTML = getOrderOfMagnitudeName(value1 * Math.pow(10, unit["api"]["balance"]))
-                    + unit["base"]["coin"];
-            }else{
-                return retryBalanceAndHashrate();
-            }
-            if(data.hasOwnProperty("data") && data["data"].hasOwnProperty("hashrate") && isNumeric(data["data"]["hashrate"])){
-                var value2 = Number(data["data"]["hashrate"]);
-                lastHashrate = value2;
-                if(!isNaN(value2) && value2 === 0){
+            try{
+                data = JSON.parse(data);
+                console.log(data);
+                if(data.hasOwnProperty("data", "balance") && isNumeric(data["data"]["balance"])){
+                    var value1 = Number(data["data"]["balance"]);
+                    var level1 = getOrderOfMagnitudeF(value1);
+                    document.getElementById("balance").innerHTML = (value1*Math.pow(10,-level1)).toPrecision(4);
+                    document.getElementById("balance-unit").innerHTML = getOrderOfMagnitudeName(value1 * Math.pow(10, unit["api"]["balance"]))
+                        + unit["base"]["coin"];
+                }else{
                     return retryBalanceAndHashrate();
                 }
-                console.log(value2);
-                var level2 = getOrderOfMagnitudeF(value2);
-                document.getElementById("hashrate").innerHTML = (value2*Math.pow(10,-level2)).toPrecision(4);
-                document.getElementById("hashrate-unit").innerHTML = getOrderOfMagnitudeName(value2 * Math.pow(10, unit["api"]["hashrate"]))
-                    + unit["base"]["rate"];
-            }else{
-                return retryBalanceAndHashrate();
+                if(data.hasOwnProperty("data") && data["data"].hasOwnProperty("hashrate") && isNumeric(data["data"]["hashrate"])){
+                    var value2 = Number(data["data"]["hashrate"]);
+                    lastHashrate = value2;
+                    if(!isNaN(value2) && value2 === 0){
+                        return retryBalanceAndHashrate();
+                    }
+                    console.log(value2);
+                    var level2 = getOrderOfMagnitudeF(value2);
+                    document.getElementById("hashrate").innerHTML = (value2*Math.pow(10,-level2)).toPrecision(4);
+                    document.getElementById("hashrate-unit").innerHTML = getOrderOfMagnitudeName(value2 * Math.pow(10, unit["api"]["hashrate"]))
+                        + unit["base"]["rate"];
+                }else{
+                    return retryBalanceAndHashrate();
+                }
+                return successBalanceAndHashrate();
+            }catch(e){
+                console.log('Caught: '+ e);
             }
-            return successBalanceAndHashrate();
         },
         error: function(){
             return retryBalanceAndHashrate();
@@ -317,23 +321,27 @@ function updateAvgHashrate(){
         dataType: "html",
         url: arg + "&dataType=avgHashrate&avgRange=" + config["avgRange"],
         success: function(data){
-            data = JSON.parse(data);
-            if(data["status"] === "ok"){
-                console.log(data);
-                if(data.hasOwnProperty("avgHashrate") && isNumeric(data["avgHashrate"])){
-                    var value = Number(data["avgHashrate"]);
-                    console.log(value);
-                    var level = getOrderOfMagnitudeF(value);
-                    document.getElementById("avgHashrate").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
-                    document.getElementById("avgHashrate-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["avgHashrate"]))
-                        + unit["base"]["rate"];
-                    document.getElementById("hr-avg").innerHTML = config["avgRange"] + "hr. avg";
+            try{
+                data = JSON.parse(data);
+                if(data["status"] === "ok"){
+                    console.log(data);
+                    if(data.hasOwnProperty("avgHashrate") && isNumeric(data["avgHashrate"])){
+                        var value = Number(data["avgHashrate"]);
+                        console.log(value);
+                        var level = getOrderOfMagnitudeF(value);
+                        document.getElementById("avgHashrate").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
+                        document.getElementById("avgHashrate-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["avgHashrate"]))
+                            + unit["base"]["rate"];
+                        document.getElementById("hr-avg").innerHTML = config["avgRange"] + "hr. avg";
+                    }
+                    lastAvgSpeed = Number(data["avgHashrate"]);
+                }else{
+                    return retryAvgHashrate();
                 }
-                lastAvgSpeed = Number(data["avgHashrate"]);
-            }else{
-                return retryAvgHashrate();
+                return successAvgHashrate();
+            }catch(e){
+                console.log('Caught: '+ e);
             }
-            return successAvgHashrate();
         },
         error: function () {
             return retryAvgHashrate();
@@ -371,19 +379,23 @@ function updateCalc(){
             dataType: "html",
             url: arg + "&dataType=estimatedEarnings" + "&speed=" + lastAvgSpeed,
             success: function(data){
-                data = JSON.parse(data);
-                console.log(data);
-                if(data.hasOwnProperty("estimatedEarnings", "day", "coins") && isNumeric(data["estimatedEarnings"]["day"]["coins"])){
-                    var value = Number(data["estimatedEarnings"]["day"]["coins"]);
-                    console.log(value);
-                    var level = getOrderOfMagnitudeF(value);
-                    document.getElementById("estimatedEarnings").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
-                    document.getElementById("estimatedEarnings-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["estimatedEarnings"]))
-                        + unit["base"]["coinRate"];
-                }else{
-                    return retryCalc();
+                try{
+                    data = JSON.parse(data);
+                    console.log(data);
+                    if(data.hasOwnProperty("estimatedEarnings", "day", "coins") && isNumeric(data["estimatedEarnings"]["day"]["coins"])){
+                        var value = Number(data["estimatedEarnings"]["day"]["coins"]);
+                        console.log(value);
+                        var level = getOrderOfMagnitudeF(value);
+                        document.getElementById("estimatedEarnings").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
+                        document.getElementById("estimatedEarnings-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["estimatedEarnings"]))
+                            + unit["base"]["coinRate"];
+                    }else{
+                        return retryCalc();
+                    }
+                    return successCalc();
+                }catch(e){
+                    console.log('Caught: '+ e);
                 }
-                return successCalc();
             },
             error: function () {
                 return retryCalc();
@@ -427,19 +439,23 @@ function updateTotalPayments(){
         dataType: "html",
         url: arg + "&dataType=payments",
         success: function(data){
-            data = JSON.parse(data);
-            console.log(data);
-            if(data.hasOwnProperty("sum") && isNumeric(data["sum"])){
-                var value = Number(data["sum"]);
-                console.log(value);
-                var level = getOrderOfMagnitudeF(value);
-                document.getElementById("payments").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
-                document.getElementById("payments-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["payments"]))
-                    + unit["base"]["coin"];
-            }else{
-                return retryTotalPayments();
+            try{
+                data = JSON.parse(data);
+                console.log(data);
+                if(data.hasOwnProperty("sum") && isNumeric(data["sum"])){
+                    var value = Number(data["sum"]);
+                    console.log(value);
+                    var level = getOrderOfMagnitudeF(value);
+                    document.getElementById("payments").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
+                    document.getElementById("payments-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["payments"]))
+                        + unit["base"]["coin"];
+                }else{
+                    return retryTotalPayments();
+                }
+                return successTotalPayments();
+            }catch(e){
+                console.log('Caught: '+ e);
             }
-            return successTotalPayments();
         },
         error: function () {
             return retryTotalPayments();
@@ -476,19 +492,23 @@ function updatePrices(){
         dataType: "html",
         url: arg + "&dataType=prices",
         success: function(data){
-            data = JSON.parse(data);
-            console.log(data);
-            if(data.hasOwnProperty("prices", "price_" + config["priceUnit"]) && isNumeric(data["prices"]["price_" + config["priceUnit"]])){
-                var value = data["prices"]["price_" + config["priceUnit"]];
-                document.getElementById("prices-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["prices"]))
-                    + config["priceUnit"].toUpperCase();
-                console.log(value);
-                var level = getOrderOfMagnitudeF(value);
-                document.getElementById("prices").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
-            }else{
-                return retryPrices();
+            try{
+                data = JSON.parse(data);
+                console.log(data);
+                if(data.hasOwnProperty("prices", "price_" + config["priceUnit"]) && isNumeric(data["prices"]["price_" + config["priceUnit"]])){
+                    var value = data["prices"]["price_" + config["priceUnit"]];
+                    document.getElementById("prices-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["prices"]))
+                        + config["priceUnit"].toUpperCase();
+                    console.log(value);
+                    var level = getOrderOfMagnitudeF(value);
+                    document.getElementById("prices").innerHTML = (value*Math.pow(10,-level)).toPrecision(4);
+                }else{
+                    return retryPrices();
+                }
+                return successPrices();
+            }catch(e){
+                console.log('Caught: '+ e);
             }
-            return successPrices();
         },
         error: function () {
             return retryPrices();
