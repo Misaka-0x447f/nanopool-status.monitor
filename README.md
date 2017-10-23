@@ -5,6 +5,8 @@ Screenshot
 
 ![image](https://user-images.githubusercontent.com/15797507/31890671-838443dc-b836-11e7-97b1-976ad1a6d49d.png)
 
+![image](https://user-images.githubusercontent.com/15797507/31891000-a00b5396-b837-11e7-8ecc-b87061cbb381.png)
+
 an ETH/ETC/XMR/ZEC(nanopool) mining monitor that could be run on any phone that support morden browser.
 
 ## env requirement
