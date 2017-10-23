@@ -189,7 +189,7 @@ function updateGUI(){
         }
         setStyleRedBlack(["hashrate-unit", "current", "hashrate"]);
     }else{
-        if(document.getElementById("hashrate").parentNode.style.backgroundColor === "#f43"){
+        if(document.getElementById("hashrate").parentNode.style.backgroundColor === "rgb(255, 68, 51)"){
             document.body.style.backgroundColor = "#000";
             function setStyleBlackBlue(idList){
                 for(i in idList){
