@@ -114,7 +114,7 @@ function update(){
     netLastInfo = "initializing...";
     lastHashrate = 1000;
 
-    RETRY_TIME_LIST = [15, 30, 60, 120];
+    RETRY_TIME_LIST = [15, 30, 60];
 
     initialNetStyle();
 
@@ -172,7 +172,7 @@ function updateGUI(){
         return color;
     }
 
-    if(lastHashrate <= 0.1){
+    if(lastHashrate === 0){
         if(Date.now() % flashPeriod < flashInterval * flashTimes * 0.95){
             document.body.style.backgroundColor = flashGetColor();
         }else{
@@ -189,16 +189,18 @@ function updateGUI(){
         }
         setStyleRedBlack(["hashrate-unit", "current", "hashrate"]);
     }else{
-        document.body.style.backgroundColor = "#000";
-        function setStyleBlackRed(idList){
-            for(i in idList){
-                if(idList.hasOwnProperty(i)){
-                    document.getElementById(idList[i]).style.color = "#6cf";
-                    document.getElementById(idList[i]).parentNode.style.backgroundColor = "#000";
+        if(document.getElementById("hashrate").parentNode.style.backgroundColor === "#f43"){
+            document.body.style.backgroundColor = "#000";
+            function setStyleBlackBlue(idList){
+                for(i in idList){
+                    if(idList.hasOwnProperty(i)){
+                        document.getElementById(idList[i]).style.color = "#6cf";
+                        document.getElementById(idList[i]).parentNode.style.backgroundColor = "#000";
+                    }
                 }
             }
+            setStyleBlackBlue(["hashrate-unit", "current", "hashrate"]);
         }
-        setStyleBlackRed(["hashrate-unit", "current", "hashrate"]);
     }
 
     setTimeout(updateGUI, 25);
@@ -273,14 +275,14 @@ function updateBalanceAndHashrate(){
                 if(data.hasOwnProperty("data") && data["data"].hasOwnProperty("hashrate") && isNumeric(data["data"]["hashrate"])){
                     var value2 = Number(data["data"]["hashrate"]);
                     lastHashrate = value2;
-                    if(!isNaN(value2) && value2 === 0){
-                        return retryBalanceAndHashrate();
-                    }
-                    console.log(value2);
+                    console.log("lastHashrate: " + value2);
                     var level2 = getOrderOfMagnitudeF(value2);
                     document.getElementById("hashrate").innerHTML = (value2*Math.pow(10,-level2)).toPrecision(4);
                     document.getElementById("hashrate-unit").innerHTML = getOrderOfMagnitudeName(value2 * Math.pow(10, unit["api"]["hashrate"]))
                         + unit["base"]["rate"];
+                    if(lastHashrate === 0){
+                        return retryBalanceAndHashrate(true)
+                    }
                 }else{
                     return retryBalanceAndHashrate();
                 }
@@ -294,14 +296,19 @@ function updateBalanceAndHashrate(){
         },
         timeout:30000
     });
-    function retryBalanceAndHashrate(){
+    function retryBalanceAndHashrate(noStyle){
         timer = RETRY_TIME_LIST[limitRange(netStatus["balanceAndHashrate"]["retryCount"], 0, RETRY_TIME_LIST.length - 1)];
         setTimeout(updateBalanceAndHashrate, timer*1000);
         netStatus["balanceAndHashrate"]["status"] = "retrying";
         netStatus["balanceAndHashrate"]["retryCount"]++;
         netLastInfo = txt("net_bah_retry", timer);
-        setNetStyle("balance", "retrying");
-        setNetStyle("hashrate", "retrying");
+        if(noStyle !== true){
+            setNetStyle("balance", "retrying");
+            setNetStyle("hashrate", "retrying");
+        }else{
+            setNetStyle("balance", "done");
+            setNetStyle("hashrate", "retrying");
+        }
         netStatus["balanceAndHashrate"]["nextUpdate"] = Date.now() + timer * 1000;
         return false;
     }
