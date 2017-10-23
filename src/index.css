@@ -59,13 +59,14 @@ table{
     text-align: center;
 }
 #progress-bar{
-    background-color: #347;
+    background-color: #6cf;
 }
 #progress-bar-inner{
-    background-color: #6cf;
+    background-color: #347;
 }
 #progress-bar, #progress-bar-inner{
     position: fixed;
-    top: 0;
-    height: 1.3rem;
+    bottom: 0;
+    left: 1.6rem;
+    height: 0.1rem;
 }

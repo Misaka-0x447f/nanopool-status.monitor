@@ -114,7 +114,7 @@ function update(){
     netLastInfo = "initializing...";
     lastHashrate = 1000;
 
-    RETRY_TIME_LIST = [5, 15, 30, 60, 120];
+    RETRY_TIME_LIST = [15, 30, 60, 120];
 
     initialNetStyle();
 
@@ -138,13 +138,18 @@ function update(){
 }
 function updateGUI(){
     $("html").css("font-size", 60*(window_width()/1920) + "px");
+    $("table").css("font-size", 60*(window_width()/1920) + "px")
+        .css("margin-top", 2.5*(window_height()/1080) + "rem");
     for(i in netStatus){
         if(netStatus.hasOwnProperty(i) && netStatus[i].hasOwnProperty("nextUpdate") && (min === undefined || netStatus[i]["nextUpdate"] < min)){
             var min = netStatus[i]["nextUpdate"];
         }
     }
-    document.getElementById("progress-bar").style.width = "17.7rem";
-    document.getElementById("progress-bar-inner").style.width = (min - Date.now()) / (config["updateInterval"] * 60 * 1000) * 17.7 + "rem";
+
+    var barWidth = 29;
+
+    document.getElementById("progress-bar").style.width = barWidth + "rem";
+    document.getElementById("progress-bar-inner").style.width = (min - Date.now()) / (config["updateInterval"] * 60 * 1000) * barWidth + "rem";
 
     var flashInterval = 800;
     var flashPeriod   = 15000;
@@ -578,9 +583,14 @@ function limitRange(variable, floor, ceil){
     return variable
 }
 function window_width(){
-    return document.documentElement.clientWidth;
-    /*    return window.innerWidth
+    return window.innerWidth
         || document.documentElement.clientWidth
         || document.body.clientWidth
-        || 0;*/
+        || 0;
+}
+function window_height(){
+    return window.innerHeight
+    || document.documentElement.clientHeight
+    || document.body.clientHeight
+    || 0;
 }

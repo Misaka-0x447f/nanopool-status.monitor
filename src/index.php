@@ -41,11 +41,6 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
     ?>
 </script>
 <body>
-<div id="progress-bar">
-    <div id="progress-bar-inner">
-
-    </div>
-</div>
 <div id="container">
     <table>
         <tr class="label-big">
@@ -156,6 +151,11 @@ if (isset($_GET["config"]) and property_exists($config, $_GET["config"])) {
     </table>
     <div id="console" style="display: none">
 
+    </div>
+    <div id="progress-bar">
+        <div id="progress-bar-inner">
+
+        </div>
     </div>
 </div>
 </body>
