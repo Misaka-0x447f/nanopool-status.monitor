@@ -267,7 +267,7 @@ function updateBalanceAndHashrate(){
             if(data.hasOwnProperty("data") && data["data"].hasOwnProperty("hashrate") && isNumeric(data["data"]["hashrate"])){
                 var value2 = Number(data["data"]["hashrate"]);
                 lastHashrate = value2;
-                if(lashHashrate === 0){
+                if(!isNaN(value2) && value2 === 0){
                     return retryBalanceAndHashrate();
                 }
                 console.log(value2);
