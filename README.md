@@ -2,6 +2,8 @@
 
 Screenshot
 
+![bandicam 2017-10-23 22-31-48-849_1_1](https://user-images.githubusercontent.com/15797507/31895131-ed970f32-b842-11e7-9471-5b9936c77c40.gif)
+
 ![image](https://user-images.githubusercontent.com/15797507/31890671-838443dc-b836-11e7-97b1-976ad1a6d49d.png)
 
 ![image](https://user-images.githubusercontent.com/15797507/31891000-a00b5396-b837-11e7-8ecc-b87061cbb381.png)
