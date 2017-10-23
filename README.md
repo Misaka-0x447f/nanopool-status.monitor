@@ -5,7 +5,7 @@ Screenshot
 
 ![image](https://user-images.githubusercontent.com/15797507/31890671-838443dc-b836-11e7-97b1-976ad1a6d49d.png)
 
-an ETH/ETC/XMR/ZEC monitor that could be run on windows phone(with edge).
+an ETH/ETC/XMR/ZEC(nanopool) mining monitor that could be run on any phone that support morden browser.
 
 ## env requirement
 php 7.1
