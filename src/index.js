@@ -264,7 +264,10 @@ function updateBalanceAndHashrate(){
                 data = JSON.parse(data);
                 console.log(data);
                 if(data.hasOwnProperty("data", "balance") && isNumeric(data["data"]["balance"])){
-                    var value1 = Number(data["data"]["balance"]);
+                    var value1 = Number(data["data"]["balance"]); //in some cases, balance can be under zero
+                    if(value1 < 0){
+                        value1 = 0
+                    }
                     var level1 = getOrderOfMagnitudeF(value1);
                     document.getElementById("balance").innerHTML = (value1*Math.pow(10,-level1)).toPrecision(4);
                     document.getElementById("balance-unit").innerHTML = getOrderOfMagnitudeName(value1 * Math.pow(10, unit["api"]["balance"]))
