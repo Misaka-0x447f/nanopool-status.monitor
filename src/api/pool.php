@@ -30,7 +30,7 @@ class nanopoolEtcEth{
         }
     }
 
-    public function minerBalanceAndHashrate(){
+    public function minerGeneralInfo(){
         $paraValid = $this->presetParameterValid();
         if($paraValid !== true){
             return $paraValid;
@@ -42,7 +42,7 @@ class nanopoolEtcEth{
         }
 
         $result = $this->webOpt->post(array(
-            "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/balance_hashrate/" . $this->minerAddress
+            "url" => "https://api.nanopool.org/v1/" . $this->typeOfApi . "/user/" . $this->minerAddress
         ));
         $rawResult = $result;
         $result = json_decode($result, true);

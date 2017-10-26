@@ -121,7 +121,7 @@ function update(){
     updateGUI();
 
     //1.update balance 2.update hashrate
-    updateBalanceAndHashrate();
+    updateGeneralInfo();
 
     //3.update avgHashrate
     updateAvgHashrate();
@@ -249,7 +249,7 @@ function initialNetStyle(){
     setNetStyle("prices", "init");
 }
 
-function updateBalanceAndHashrate(){
+function updateGeneralInfo(){
     netStatus["balanceAndHashrate"]["status"] = "requesting";
     netLastInfo = txt("net_bah_requesting");
     setNetStyle("balance", "requesting");
@@ -258,13 +258,13 @@ function updateBalanceAndHashrate(){
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
         dataType: "html",
-        url: arg + "&dataType=balance_hashrate",
+        url: arg + "&dataType=generalInfo",
         success: function(data){
             try{
                 data = JSON.parse(data);
                 console.log(data);
-                if(data.hasOwnProperty("data", "balance") && isNumeric(data["data"]["balance"])){
-                    var value1 = Number(data["data"]["balance"]); //in some cases, balance can be under zero
+                if(data.hasOwnProperty("data", "balance") && isNumeric(data["data"]["balance"]) && data.hasOwnProperty("data","unconfirmed_balance") && isNumeric(data["data"]["unconfirmed_balance"])){
+                    var value1 = Number(data["data"]["balance"]) + Number(data["data"]["unconfirmed_balance"]); //in some cases, balance can be under zero
                     if(value1 < 0){
                         value1 = 0
                     }
@@ -301,7 +301,7 @@ function updateBalanceAndHashrate(){
     });
     function retryBalanceAndHashrate(noStyle){
         timer = RETRY_TIME_LIST[limitRange(netStatus["balanceAndHashrate"]["retryCount"], 0, RETRY_TIME_LIST.length - 1)];
-        setTimeout(updateBalanceAndHashrate, timer*1000);
+        setTimeout(updateGeneralInfo, timer*1000);
         netStatus["balanceAndHashrate"]["status"] = "retrying";
         netStatus["balanceAndHashrate"]["retryCount"]++;
         netLastInfo = txt("net_bah_retry", timer);
@@ -316,7 +316,7 @@ function updateBalanceAndHashrate(){
         return false;
     }
     function successBalanceAndHashrate(){
-        setTimeout(updateBalanceAndHashrate, Number(config["updateInterval"])*60*1000);
+        setTimeout(updateGeneralInfo, Number(config["updateInterval"])*60*1000);
         netStatus["balanceAndHashrate"]["status"] = "done";
         netStatus["balanceAndHashrate"]["retryCount"] = 0;
         netLastInfo = txt("net_bah_success");
