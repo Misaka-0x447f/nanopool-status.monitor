@@ -299,18 +299,18 @@ function updateGeneralInfo(){
         },
         timeout:30000
     });
-    function retryBalanceAndHashrate(noStyle){
+    function retryBalanceAndHashrate(retryOnly){
         timer = RETRY_TIME_LIST[limitRange(netStatus["balanceAndHashrate"]["retryCount"], 0, RETRY_TIME_LIST.length - 1)];
         setTimeout(updateGeneralInfo, timer*1000);
         netStatus["balanceAndHashrate"]["status"] = "retrying";
         netStatus["balanceAndHashrate"]["retryCount"]++;
         netLastInfo = txt("net_bah_retry", timer);
-        if(noStyle !== true){
+        if(retryOnly !== true){
             setNetStyle("balance", "retrying");
             setNetStyle("hashrate", "retrying");
         }else{
             setNetStyle("balance", "done");
-            setNetStyle("hashrate", "retrying");
+            setNetStyle("hashrate", "done");
         }
         netStatus["balanceAndHashrate"]["nextUpdate"] = Date.now() + timer * 1000;
         return false;
@@ -363,13 +363,17 @@ function updateAvgHashrate(){
         },
         timeout:30000
     });
-    function retryAvgHashrate(){
+    function retryAvgHashrate(retryOnly){
         timer = RETRY_TIME_LIST[limitRange(netStatus["avgHashrate"]["retryCount"], 0, RETRY_TIME_LIST.length - 1)];
         setTimeout(updateAvgHashrate, timer*1000);
         netStatus["avgHashrate"]["status"] = "retrying";
         netStatus["avgHashrate"]["retryCount"]++;
         netLastInfo = txt("net_avg_retry", timer);
-        setNetStyle("avgHashrate", "retrying");
+        if(retryOnly !== true){
+            setNetStyle("avgHashrate", "retrying");
+        }else{
+            setNetStyle("avgHashrate", "done");
+        }
         netStatus["avgHashrate"]["nextUpdate"] = Date.now() + timer * 1000;
         return false;
     }
