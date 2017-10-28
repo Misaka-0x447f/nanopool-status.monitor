@@ -235,7 +235,7 @@ function setNetStyle(id, style){
     }else if(style === "done") {
         document.getElementById(id).style.color = "#6cf";
     }else if(style === "questionable"){
-        document.getElementById(id).style.color = "#6fd"
+        document.getElementById(id).style.color = "#aaa"
     }else if(style === "requesting"){
         document.getElementById(id).style.color = "#57a";
     }else if(style === "retrying"){
@@ -350,6 +350,9 @@ function updateAvgHashrate(){
                         document.getElementById("avgHashrate-unit").innerHTML = getOrderOfMagnitudeName(value * Math.pow(10, unit["api"]["avgHashrate"]))
                             + unit["base"]["rate"];
                         document.getElementById("hr-avg").innerHTML = config["avgRange"] + "hr. avg";
+                        if(value === 0){
+                            return retryAvgHashrate(true)
+                        }
                     }
                     lastAvgSpeed = Number(data["avgHashrate"]);
                 }else{
