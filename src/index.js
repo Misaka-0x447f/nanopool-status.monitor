@@ -232,12 +232,14 @@ function txt(requests, txt1){
 function setNetStyle(id, style){
     if(style === "init"){
         document.getElementById(id).style.color = "#236";
-    }else if(style === "done"){
+    }else if(style === "done") {
         document.getElementById(id).style.color = "#6cf";
+    }else if(style === "questionable"){
+        document.getElementById(id).style.color = "#6fd"
     }else if(style === "requesting"){
         document.getElementById(id).style.color = "#57a";
     }else if(style === "retrying"){
-        document.getElementById(id).style.color = "#f77";
+        document.getElementById(id).style.color = "#fe5";
     }
 }
 function initialNetStyle(){
@@ -299,13 +301,13 @@ function updateGeneralInfo(){
         },
         timeout:30000
     });
-    function retryBalanceAndHashrate(retryOnly){
+    function retryBalanceAndHashrate(hashrateAlert){
         timer = RETRY_TIME_LIST[limitRange(netStatus["balanceAndHashrate"]["retryCount"], 0, RETRY_TIME_LIST.length - 1)];
         setTimeout(updateGeneralInfo, timer*1000);
         netStatus["balanceAndHashrate"]["status"] = "retrying";
         netStatus["balanceAndHashrate"]["retryCount"]++;
         netLastInfo = txt("net_bah_retry", timer);
-        if(retryOnly !== true){
+        if(hashrateAlert !== true){
             setNetStyle("balance", "retrying");
             setNetStyle("hashrate", "retrying");
         }else{
@@ -363,16 +365,16 @@ function updateAvgHashrate(){
         },
         timeout:30000
     });
-    function retryAvgHashrate(retryOnly){
+    function retryAvgHashrate(questionable){
         timer = RETRY_TIME_LIST[limitRange(netStatus["avgHashrate"]["retryCount"], 0, RETRY_TIME_LIST.length - 1)];
         setTimeout(updateAvgHashrate, timer*1000);
         netStatus["avgHashrate"]["status"] = "retrying";
         netStatus["avgHashrate"]["retryCount"]++;
         netLastInfo = txt("net_avg_retry", timer);
-        if(retryOnly !== true){
+        if(questionable !== true){
             setNetStyle("avgHashrate", "retrying");
         }else{
-            setNetStyle("avgHashrate", "done");
+            setNetStyle("avgHashrate", "questionable");
         }
         netStatus["avgHashrate"]["nextUpdate"] = Date.now() + timer * 1000;
         return false;
