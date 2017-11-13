@@ -19,7 +19,9 @@ a darker blue digit means this value is being update.
 the progress bar indicated time until next update.
 
 ## env requirement
-php 7.1
+php7.1
+
+php7.1-curl
 
 nanopool.org
 
